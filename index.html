@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);</script>
+<script>/* Détection appareil peu puissant (Android d'entrée de gamme, data-saver,
+mouvement réduit) -> classe .lowfx appliquée AVANT le 1er paint pour couper les
+effets GPU coûteux (verre dépoli, animations permanentes) via le CSS. */
+(function(){try{var n=navigator||{},ua=n.userAgent||'',
+lm=(typeof n.deviceMemory==='number'&&n.deviceMemory<=4),
+lc=(typeof n.hardwareConcurrency==='number'&&n.hardwareConcurrency<=4),
+sd=!!(n.connection&&n.connection.saveData),rm=false;
+try{rm=matchMedia('(prefers-reduced-motion:reduce)').matches;}catch(e){}
+if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add('lowfx');}
+}catch(e){}})();</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -465,6 +475,20 @@
   .gwb .gwv{position:absolute;left:0;top:-1px;width:200%;height:100%;display:block;}
   .gwv-f{animation:skaleos-wave-r 11s linear infinite;}
   .gwv-b{animation:skaleos-wave-l 15s linear infinite;}
+  /* ===== Mode faibles specs (.lowfx) : Android d'entrée de gamme, data-saver,
+     mouvement réduit. On coupe les effets GPU les plus coûteux. ===== */
+  html.lowfx *,html.lowfx *::before,html.lowfx *::after{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+  /* Animations décoratives permanentes -> stoppées (orbites, halos, sheen, vagues) */
+  html.lowfx .spin,html.lowfx .spinr,html.lowfx .spin2,html.lowfx .spin2r,
+  html.lowfx .brhalo,html.lowfx .ptrihalo,html.lowfx .ptrihalo2,html.lowfx .gsheen,
+  html.lowfx .box3dhint,html.lowfx .gwv-f,html.lowfx .gwv-b,html.lowfx .glasspane .gsheen{animation:none !important;}
+  /* Moins de calques GPU en mémoire */
+  html.lowfx .spin,html.lowfx .spinr,html.lowfx .spin2,html.lowfx .spin2r,
+  html.lowfx .brhalo,html.lowfx .ptrihalo,html.lowfx .ptrihalo2{will-change:auto !important;}
+  /* Boutons "verre" : sans blur, on remet un fond lisible (sinon invisibles) */
+  html.lowfx .skglass,html.lowfx #skHeroSound,html.lowfx #skHeroFs{background:rgba(16,26,21,.6) !important;border-color:rgba(255,255,255,.28) !important;box-shadow:0 2px 8px rgba(0,0,0,.35) !important;}
+  /* Header translucide sans blur -> fond quasi opaque pour rester lisible */
+  html.lowfx header{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 </style>
 </helmet>
 
@@ -1129,6 +1153,8 @@ class Component extends DCLogic {
     for (let i = 0; i < 26; i++) mkShard(6 + Math.random() * 16, Math.random() * Math.PI * 2, 200 + Math.random() * 460, 1.0 + Math.random() * 0.5, false);
   }
   componentDidMount() {
+    // Appareil peu puissant : classe posée avant le paint par le script du <head>.
+    this._lowfx = document.documentElement.classList.contains('lowfx');
     ['assets/logo-yadulink.webp', 'assets/partners/yazee.png', 'assets/face-kevin.jpg', 'assets/face-florian.png',
      'https://img.youtube.com/vi/nWewM3Mpr5o/maxresdefault.jpg', 'https://img.youtube.com/vi/C41WcoMRwmQ/maxresdefault.jpg'
     ].forEach((src) => { const im = new Image(); im.src = src; });
@@ -1159,9 +1185,10 @@ class Component extends DCLogic {
         if (!this._navOn && y > 64) this._navOn = true;
         else if (this._navOn && y < 24) this._navOn = false;
         const on = this._navOn;
-        hd.style.background = on ? 'rgba(244,244,242,0.32)' : '#F4F4F2';
-        hd.style.backdropFilter = on ? 'blur(18px) saturate(1.5)' : 'none';
-        hd.style.webkitBackdropFilter = on ? 'blur(18px) saturate(1.5)' : 'none';
+        // Sur appareil peu puissant : pas de verre dépoli (blur coûteux) -> fond opaque.
+        hd.style.background = on ? (this._lowfx ? '#F4F4F2' : 'rgba(244,244,242,0.32)') : '#F4F4F2';
+        hd.style.backdropFilter = (on && !this._lowfx) ? 'blur(18px) saturate(1.5)' : 'none';
+        hd.style.webkitBackdropFilter = (on && !this._lowfx) ? 'blur(18px) saturate(1.5)' : 'none';
         hd.style.boxShadow = on ? '0 10px 30px rgba(14,38,32,0.06)' : 'none';
         hd.style.borderBottomColor = on ? 'rgba(230,230,225,0.5)' : '#E6E6E1';
         const nav = hd.querySelector('nav');
@@ -1402,7 +1429,7 @@ class Component extends DCLogic {
           if (entry.isIntersecting) { this._gifPlay(el); }
           else { try { el.pause && el.pause(); } catch (err) {} }
         });
-      }, { rootMargin: '200px 0px', threshold: 0 });
+      }, { rootMargin: (this._lowfx ? '0px' : '200px 0px'), threshold: 0 });
     this._pauseMarq = () => { (this._marq || []).forEach(s => { s.fsLock = true; s.paused = true; clearTimeout(s.resumeT); }); };
     this._resumeMarq = () => { if (this._playingWistia && this._playingWistia.size) return; (this._marq || []).forEach(s => { s.fsLock = false; if (!s.dragging && !s.videoLock) s.paused = false; }); };
     this._wireWistia = () => {
@@ -1464,6 +1491,7 @@ class Component extends DCLogic {
         const mkBtn = (label, side) => {
           const b = document.createElement('button');
           b.type = 'button';
+          b.className = 'skglass';
           b.setAttribute('aria-label', label);
           b.style.cssText = 'position:absolute;top:10px;' + side + ':10px;z-index:7;width:34px;height:34px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 3px 12px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;';
           b.addEventListener('mouseenter', () => { b.style.transform = 'scale(1.1)'; b.style.background = 'rgba(255,255,255,.22)'; });
