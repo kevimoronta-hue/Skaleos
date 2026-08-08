@@ -12,6 +12,10 @@
 <link rel="preload" as="image" href="assets/partners/yazee.png">
 <link rel="preload" as="image" href="assets/face-kevin.jpg">
 <link rel="preload" as="image" href="assets/face-florian.png">
+<link rel="preload" as="image" href="assets/agora-normal.jpg" fetchpriority="low" media="(min-width: 761px)">
+<link rel="preload" as="image" href="assets/agora-pressed.jpg" fetchpriority="low" media="(min-width: 761px)">
+<link rel="preload" as="image" href="assets/mobile-dalle-normal.jpg" fetchpriority="low" media="(max-width: 760px)">
+<link rel="preload" as="image" href="assets/mobile-dalle-pressed.jpg" fetchpriority="low" media="(max-width: 760px)">
 <title>Skaleos — Le système qui te dit où tu perds des ventes | Structuration commerciale</title>
 <meta name="description" content="Skaleos structure ton système de vente : identifie où tu perds des leads à chaque étape de ton funnel, automatise le suivi et pilote ton équipe sales au même endroit. Audit stratégique offert de 30 min, sans engagement.">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -574,14 +578,14 @@
 
           <div style="position:relative;width:100%;aspect-ratio:16 / 9;border-radius:20px;overflow:hidden;background:#0d1512;border:1px solid rgba(143,233,191,.16);display:flex;align-items:center;justify-content:center;grid-area:video;">
             <sc-if value="{{ cs.ytThumb }}" hint-placeholder-val="{{ false }}">
-              <iframe src="{{ cs.videoUrl }}" title="Témoignage {{ cs.person }}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen=""></iframe>
+              <iframe src="{{ cs.ytEmbed }}" title="Témoignage {{ cs.person }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen=""></iframe>
             </sc-if>
             <sc-if value="{{ csNoThumb }}" hint-placeholder-val="{{ true }}">
               <image-slot id="{{ cs.videoId }}" shape="rect" placeholder="Vidéo client (à venir)" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+              <span aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:#8FE9BF;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(19,179,125,.4);pointer-events:none;">
+                <span style="width:0;height:0;margin-left:5px;border-left:22px solid #04231a;border-top:14px solid transparent;border-bottom:14px solid transparent;"></span>
+              </span>
             </sc-if>
-            <span aria-hidden="true" style="position:relative;width:74px;height:74px;border-radius:50%;background:#8FE9BF;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(19,179,125,.4);pointer-events:none;">
-              <span style="width:0;height:0;margin-left:5px;border-left:22px solid #04231a;border-top:14px solid transparent;border-bottom:14px solid transparent;"></span>
-            </span>
           </div>
         </div>
 
@@ -604,10 +608,10 @@
       </div>
     <div class="agora {{ quakeCls }}" style="position:relative;width:100%;aspect-ratio:1656 / 932;overflow:hidden;">
       <div class="agorainner" style="position:absolute;inset:0;">
-      <img class="agora-d" src="assets/agora-normal.png" alt="Agora de pierre" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;will-change:opacity;">
-      <img class="agora-d" src="assets/agora-pressed.png" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:{{ pressOpacity }};transition:opacity .18s ease-out;pointer-events:none;will-change:opacity;">
-      <img class="agora-m" src="assets/mobile-dalle-normal.png" alt="Dalle Skaleos" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;will-change:opacity;">
-      <img class="agora-m" src="assets/mobile-dalle-pressed.png" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;opacity:{{ pressOpacity }};transition:opacity .18s ease-out;pointer-events:none;will-change:opacity;">
+      <img class="agora-d" src="assets/agora-normal.jpg" alt="Agora de pierre" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;will-change:opacity;">
+      <img class="agora-d" src="assets/agora-pressed.jpg" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:{{ pressOpacity }};transition:opacity .12s ease-out;pointer-events:none;will-change:opacity;">
+      <img class="agora-m" src="assets/mobile-dalle-normal.jpg" alt="Dalle Skaleos" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;will-change:opacity;">
+      <img class="agora-m" src="assets/mobile-dalle-pressed.jpg" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;opacity:{{ pressOpacity }};transition:opacity .12s ease-out;pointer-events:none;will-change:opacity;">
 
 
       <a class="agora-d" href="{{ icloseHref }}" onMouseDown="{{ onStoneDown }}" onMouseUp="{{ onStoneUp }}" onMouseLeave="{{ onStoneUp }}" onTouchStart="{{ onStoneDown }}" onTouchEnd="{{ onStoneUp }}" onClick="{{ onStoneClick }}" aria-label="Franchir la dalle" style="position:absolute;left:34.5%;top:50.2%;width:29.6%;height:29.4%;z-index:4;display:block;text-decoration:none;clip-path:polygon(15.5% 3%, 86.5% 3%, 100% 98%, 0% 100%);background:{{ stoneTint }};transition:background .25s ease;cursor:pointer;"></a>
@@ -1735,7 +1739,10 @@ class Component extends DCLogic {
     const burgerBot = navOpen ? 'translateY(-6.8px) rotate(-45deg)' : 'none';
     const burgerMidOp = navOpen ? 0 : 1;
     const stonePressed = !!this.state.stonePressed;
-    const onStoneDown = () => this.setState({ stonePressed: true });
+    const onStoneDown = () => {
+      try { if (navigator.vibrate) navigator.vibrate(12); } catch (err) { /* pas de vibreur */ }
+      this.setState({ stonePressed: true });
+    };
     const onStoneUp = () => { if (!this.stoneGoing) this.setState({ stonePressed: false }); };
     const playThud = () => {
       try {
@@ -1847,7 +1854,11 @@ class Component extends DCLogic {
     ].map((c) => {
       const o = (cms.caseStudies || []).find((x) => x.key === c.key);
       return o ? { ...c, ...o, points: (o.points && o.points.length) ? o.points : c.points } : c;
-    }).map(c => ({ ...c, logoId: 'cs-logo-' + c.key, avatarId: 'cs-avatar-' + c.key, videoId: 'cs-video-' + c.key, shot1: 'cs-shot-1-' + c.key, shot2: 'cs-shot-2-' + c.key, shot3: 'cs-shot-3-' + c.key, shot4: 'cs-shot-4-' + c.key }));
+    }).map(c => {
+      const ytm = (c.videoUrl || '').match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([\w-]{6,})/);
+      const ytEmbed = ytm ? ('https://www.youtube.com/embed/' + ytm[1] + '?rel=0&playsinline=1&modestbranding=1') : (c.videoUrl || '');
+      return { ...c, ytEmbed, logoId: 'cs-logo-' + c.key, avatarId: 'cs-avatar-' + c.key, videoId: 'cs-video-' + c.key, shot1: 'cs-shot-1-' + c.key, shot2: 'cs-shot-2-' + c.key, shot3: 'cs-shot-3-' + c.key, shot4: 'cs-shot-4-' + c.key };
+    });
     const csI = ((this.state.csIdx || 0) % csCases.length + csCases.length) % csCases.length;
     const cs = csCases[csI];
     const csNoThumb = !cs.ytThumb;
