@@ -160,7 +160,7 @@
   @keyframes skaleos-dotpop{0%{transform:scale(1);}45%{transform:scale(1.16);}100%{transform:scale(1);}}
   .frise{position:relative;max-width:1000px;margin:96px auto 0;text-align:left;}
   .frrail{position:absolute;left:38px;top:0;height:0;width:4px;pointer-events:none;}
-  .frfill{position:absolute;left:0;top:0;width:100%;height:0;background:#0E2620;border-radius:4px;transition:height .35s cubic-bezier(.22,1,.36,1);will-change:height;}
+  .frfill{position:absolute;left:0;top:0;width:100%;height:0;background:#0E2620;border-radius:4px;will-change:height;}
   .frstep{position:relative;display:grid;grid-template-columns:80px 340px 1fr;gap:38px;align-items:center;padding:80px 0;}
   .frstep .frphoto,.frstep .frbody{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
   .frstep .frbody{transition-delay:.1s;}
@@ -249,11 +249,12 @@
       margin:0 12px !important;width:calc(100% - 24px) !important;
       border-radius:999px !important;
       border:1px solid rgba(255,255,255,.5) !important;
-      background:rgba(244,244,242,.55) !important;
-      backdrop-filter:blur(20px) saturate(1.6) !important;
-      -webkit-backdrop-filter:blur(20px) saturate(1.6) !important;
+      background:rgba(244,244,242,.72) !important;
+      backdrop-filter:blur(12px) saturate(1.3) !important;
+      -webkit-backdrop-filter:blur(12px) saturate(1.3) !important;
       box-shadow:0 10px 34px rgba(14,38,32,.14),inset 0 1px 0 rgba(255,255,255,.7) !important;
       overflow:hidden !important;
+      transform:translateZ(0);
     }
     /* Menu ouvert : la pilule s'étire en carte arrondie qui contient le
        menu -- même fond verre, mais nettement plus opaque pour que le
@@ -545,7 +546,7 @@
     <div class="vidpin" ref="{{ vidPinRef }}"><div class="vidsticky">
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
       <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
-        <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+        <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
       </div>
     </div>
     </div></div>
@@ -811,8 +812,7 @@
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
               <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
-                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" playbar="false" play-button="false" small-play-button="false" fullscreen-button="false" volume-control="false" settings-control="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
-                  <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
+                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                 </sc-if>
                 <sc-if value="{{ t.noWistia }}" hint-placeholder-val="{{ true }}">
                   <image-slot id="{{ t.slot }}" shape="rect" placeholder="Vidéo témoignage" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
@@ -852,8 +852,7 @@
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
               <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
-                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" playbar="false" play-button="false" small-play-button="false" fullscreen-button="false" volume-control="false" settings-control="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
-                  <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
+                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                 </sc-if>
                 <sc-if value="{{ t.noWistia }}" hint-placeholder-val="{{ true }}">
                   <image-slot id="{{ t.slot }}" shape="rect" placeholder="Vidéo témoignage" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
@@ -1172,31 +1171,18 @@ class Component extends DCLogic {
           this.setState((s) => ({ rv: { ...s.rv, [k]: true } }));
         }
       });
+      // Activation des points (états discrets) sur scroll ; la géométrie et le
+      // remplissage de la barre sont, eux, pilotés en rAF (_updateRail) pour
+      // rester fluides même pendant le défilement inertiel iOS.
       const fr = this.friseRef.current;
       if (fr && this.friseRailRef.current) {
-        const vh = window.innerHeight;
-        const midLine = vh * 0.6;
-        const friseTop = fr.getBoundingClientRect().top;
+        const midLine = window.innerHeight * 0.6;
         const dots = fr.querySelectorAll('.frdot');
-        if (dots.length > 1) {
-          const fr0 = dots[0].getBoundingClientRect();
-          const frN = dots[dots.length - 1].getBoundingClientRect();
-          const firstC = fr0.top + fr0.height / 2;
-          const lastC = frN.top + frN.height / 2;
-          const span = lastC - firstC;
-          const rail = this.friseRailRef.current;
-          rail.style.top = (firstC - friseTop) + 'px';
-          rail.style.height = span + 'px';
-          const fillPx = Math.max(0, Math.min(span, midLine - firstC));
-          if (this.friseFillRef.current) this.friseFillRef.current.style.height = fillPx + 'px';
-        }
         let changed = false;
         const next = { ...this.state.friseRev };
         dots.forEach((dot, i) => {
-          const dr = dot.getBoundingClientRect();
-          const dotTop = dr.top;
+          const active = dot.getBoundingClientRect().top <= midLine;
           const k = String(i);
-          const active = dotTop <= midLine;
           if (!!next[k] !== active) { next[k] = active; changed = true; }
         });
         if (changed) this.setState({ friseRev: next });
@@ -1211,9 +1197,29 @@ class Component extends DCLogic {
       this._lastY = y;
     };
     window.addEventListener('scroll', this.onScroll, { passive: true });
+    // Barre de progression des 5 étapes : mise à jour à chaque frame (rAF)
+    // plutôt que sur l'event scroll -- sur iOS les events scroll ne se
+    // déclenchent pas pendant l'inertie, ce qui saccadait la barre.
+    this._updateRail = () => {
+      const fr = this.friseRef.current, rail = this.friseRailRef.current, fill = this.friseFillRef.current;
+      if (!fr || !rail) return;
+      const dots = fr.querySelectorAll('.frdot');
+      if (dots.length < 2) return;
+      const friseTop = fr.getBoundingClientRect().top;
+      const fr0 = dots[0].getBoundingClientRect();
+      const frN = dots[dots.length - 1].getBoundingClientRect();
+      const firstC = fr0.top + fr0.height / 2;
+      const lastC = frN.top + frN.height / 2;
+      const span = lastC - firstC;
+      const midLine = window.innerHeight * 0.6;
+      rail.style.top = (firstC - friseTop) + 'px';
+      rail.style.height = span + 'px';
+      if (fill) fill.style.height = Math.max(0, Math.min(span, midLine - firstC)) + 'px';
+    };
     // boucle fluide pour l'expansion vidéo (lissage rAF)
     this._vzP = 0;
     const vidTick = () => {
+      if (this._updateRail) this._updateRail();
       const pin = this.vidPinRef ? this.vidPinRef.current : null;
       const vz = this.vidZoomRef.current;
       if (pin && vz) {
@@ -1364,34 +1370,75 @@ class Component extends DCLogic {
           else { try { el.pause && el.pause(); } catch (err) {} }
         });
       }, { rootMargin: '200px 0px', threshold: 0 });
+    this._pauseMarq = () => { (this._marq || []).forEach(s => { s.fsLock = true; s.paused = true; clearTimeout(s.resumeT); }); };
+    this._resumeMarq = () => { if (this._playingWistia && this._playingWistia.size) return; (this._marq || []).forEach(s => { s.fsLock = false; if (!s.dragging && !s.videoLock) s.paused = false; }); };
     this._wireWistia = () => {
       document.querySelectorAll('.tw.twv wistia-player').forEach((el) => {
         if (el._skWired) return;
         el._skWired = true;
         this._wistiaVizObserver.observe(el);
+        // Quand l'utilisateur monte le son via les contrôles natifs Wistia,
+        // on considère qu'il regarde ce clip : on le sort du mode GIF (plus
+        // de re-mute auto), et on fige le carrousel pour qu'il ne s'en aille.
+        el.addEventListener('volumechange', () => {
+          let muted = true; try { muted = el.muted; } catch (e) {}
+          if (!muted) { this._playingWistia.add(el); this._pauseMarq(); }
+          else { this._playingWistia.delete(el); this._resumeMarq(); }
+        });
+        el.addEventListener('pause', () => { this._playingWistia.delete(el); this._resumeMarq(); });
+        // Toucher une vidéo fige le carrousel un moment pour pouvoir viser les
+        // contrôles natifs (son, plein écran) sur une cible qui bouge.
+        el.addEventListener('pointerdown', () => {
+          this._pauseMarq();
+          clearTimeout(this._vidTouchT);
+          this._vidTouchT = setTimeout(() => this._resumeMarq(), 4000);
+        });
       });
     };
     this._wireWistiaT = setInterval(this._wireWistia, 1200);
     this._wireWistia();
-    // Vidéo hero : lecture auto en silencieux. Un clic active le son ; dès
-    // qu'on quitte la zone (scroll hors champ), on recoupe le son et on met
-    // en pause, et au retour ça repart en silencieux.
+    // Plein écran natif : quand un clip y entre, on fige le carrousel ; à la
+    // sortie, on recoupe le son et on relance le GIF muet proprement.
+    this._onFsChange = () => {
+      const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+      if (fsEl && (fsEl.tagName === 'WISTIA-PLAYER' || (fsEl.closest && fsEl.closest('.tw.twv')))) {
+        this._pauseMarq();
+      } else {
+        // sortie plein écran : recouper le son des clips du mur, relancer le GIF
+        document.querySelectorAll('.tw.twv wistia-player').forEach((el) => {
+          try { el.muted = true; } catch (e) {}
+          this._playingWistia.delete(el);
+        });
+        this._resumeMarq();
+      }
+    };
+    document.addEventListener('fullscreenchange', this._onFsChange);
+    document.addEventListener('webkitfullscreenchange', this._onFsChange);
+    // Vidéo hero : lecture auto en silencieux. Le bouton 🔇/🔊 (visible en
+    // bas à droite) active/coupe le son. Dès qu'on quitte la zone (scroll
+    // hors champ) : son coupé + pause. Au retour : repart en silencieux.
+    // Vidéo hero : autoplay muet géré par Wistia (silent-auto-play). Le son et
+    // le plein écran passent par les contrôles NATIFS Wistia (tap sur la
+    // vidéo). On garde juste une règle : hors de la zone, on coupe le son et on
+    // met en pause ; au retour, ça repart en muet.
     this._wireHero = () => {
       const hero = document.getElementById('skHeroVid');
       if (!hero || hero._skWired) return;
       hero._skWired = true;
-      const kickMuted = () => { let n = 0; const k = () => { try { hero.muted = true; hero.play && hero.play(); } catch (e) {} if (hero.state !== 'playing' && n++ < 12) setTimeout(k, 450); }; k(); };
-      hero.addEventListener('click', () => { try { hero.muted = false; hero.play && hero.play(); } catch (e) {} });
+      const shadowVid = () => { try { return hero.shadowRoot && hero.shadowRoot.querySelector('video'); } catch (e) { return null; } };
       this._heroObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) { kickMuted(); }
-          else { try { hero.muted = true; hero.pause && hero.pause(); } catch (e) {} }
+          const sv = shadowVid();
+          if (entry.isIntersecting) {
+            try { hero.play && hero.play(); } catch (e) {}
+          } else {
+            try { if (sv) sv.muted = true; hero.pause && hero.pause(); } catch (e) {}
+          }
         });
       }, { threshold: 0.35 });
       this._heroObserver.observe(hero);
-      kickMuted();
     };
-    this._wireHeroT = setInterval(this._wireHero, 1200);
+    this._wireHeroT = setInterval(this._wireHero, 1500);
     this._wireHero();
     this._syncNavH = () => {
       const h = document.querySelector('header');
