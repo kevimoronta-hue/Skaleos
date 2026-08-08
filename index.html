@@ -545,7 +545,7 @@
   <section class="vidsec" style="position:relative;z-index:3;margin-top:0;padding:0;pointer-events:none;">
     <div class="vidpin" ref="{{ vidPinRef }}"><div class="vidsticky">
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
-      <div id="skHeroSlot" class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505 center/cover no-repeat url('assets/wistia/wqdh0pom7s.jpg');box-shadow:0 30px 80px rgba(0,0,0,0.45);">
+      <div id="skHeroSlot" class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
         <!-- Emplacement de la vidéo hero (miniature). Le vrai lecteur Wistia est
              créé par le JS dans un portail au niveau de <body> et calé ici :
              dans l'arbre de la page, la vidéo Wistia rend noir (bug compositing
@@ -1401,6 +1401,101 @@ class Component extends DCLogic {
     };
     this._wireWistiaT = setInterval(this._wireWistia, 1200);
     this._wireWistia();
+    // Boutons "raccourcis" (son + plein écran) façon Apple/glass, superposés sur
+    // chaque clip témoignage. Ils ne font QUE piloter les contrôles natifs
+    // Wistia : le son passe par el.muted, le plein écran par requestFullscreen().
+    // Règle : un seul clip a le son à la fois. Activer le son d'un clip coupe
+    // celui de tous les autres. La logique GIF/carrousel de base reste intacte
+    // (on ne fait qu'ajouter des écouteurs, sans en retirer).
+    var TWSND_MUTED = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>';
+    var TWSND_ON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M19 6a9 9 0 0 1 0 12"/></svg>';
+    var TWFS = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+    // Registre des fonctions de synchro d'icône (une par bouton son) : quand un
+    // clip change d'état, on rafraîchit TOUTES les icônes d'un coup.
+    this._sndSyncs = [];
+    // Coupe réellement le son d'un clip (élément Wistia + <video> du shadow DOM).
+    this._muteWistiaEl = (el) => {
+      try { el.muted = true; } catch (e) {}
+      try { const v = el.shadowRoot && el.shadowRoot.querySelector('video'); if (v) v.muted = true; } catch (e) {}
+    };
+    // Coupe le son de tous les clips SAUF `keep`.
+    this._soloWistiaSound = (keep) => {
+      document.querySelectorAll('.tw.twv wistia-player').forEach((el) => {
+        if (el === keep) return;
+        this._muteWistiaEl(el);
+        this._playingWistia.delete(el);
+      });
+    };
+    this._wireWistiaCtrls = () => {
+      document.querySelectorAll('.tw.twv').forEach((card) => {
+        if (card._skCtrls) return;
+        const el = card.querySelector('wistia-player');
+        if (!el) return;
+        card._skCtrls = true;
+        const mkBtn = (label, side) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', label);
+          b.style.cssText = 'position:absolute;top:10px;' + side + ':10px;z-index:7;width:34px;height:34px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 3px 12px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;';
+          b.addEventListener('mouseenter', () => { b.style.transform = 'scale(1.1)'; b.style.background = 'rgba(255,255,255,.22)'; });
+          b.addEventListener('mouseleave', () => { b.style.transform = 'scale(1)'; b.style.background = 'rgba(255,255,255,.14)'; });
+          // Ne pas laisser le tap démarrer un drag du carrousel.
+          b.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
+          return b;
+        };
+        // Bouton SON (haut gauche) — raccourci du mute/unmute Wistia.
+        const sBtn = mkBtn('Activer le son', 'left');
+        const sIco = document.createElement('span'); sIco.style.cssText = 'display:flex;align-items:center;justify-content:center;'; sBtn.appendChild(sIco);
+        // On lit/écrit l'état réel sur le <video> interne (shadow DOM) : la
+        // propriété `muted` du <wistia-player> n'est pas fiable (icône figée).
+        const svid = () => { try { return el.shadowRoot && el.shadowRoot.querySelector('video'); } catch (e) { return null; } };
+        const isMuted = () => { const v = svid(); if (v) return !!v.muted; try { return el.muted !== false; } catch (e) { return true; } };
+        const syncSnd = () => { const m = isMuted(); sIco.innerHTML = m ? TWSND_MUTED : TWSND_ON; sBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); };
+        this._sndSyncs.push(syncSnd);
+        syncSnd();
+        // Rafraîchit toutes les icônes son (l'état des autres clips a pu changer).
+        const syncAll = () => { (this._sndSyncs || []).forEach((fn) => { try { fn(); } catch (e) {} }); };
+        // Suit aussi les changements faits via les contrôles natifs Wistia.
+        el.addEventListener('volumechange', () => { if (!isMuted()) { this._soloWistiaSound(el); this._playingWistia.add(el); this._pauseMarq(); } syncAll(); });
+        sBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); e.preventDefault();
+          const v = svid();
+          if (isMuted()) {
+            // Activer le son ici → couper les autres + figer la rangée.
+            this._soloWistiaSound(el);
+            try { el.muted = false; el.volume = 1; } catch (err) {}
+            if (v) { try { v.muted = false; v.volume = 1; } catch (err) {} }
+            try { el.play && el.play(); } catch (err) {}
+            this._playingWistia.add(el);
+            this._pauseMarq();
+          } else {
+            // Couper le son ici → relâcher la rangée (si plus aucun son actif).
+            this._muteWistiaEl(el);
+            this._playingWistia.delete(el);
+            this._resumeMarq();
+          }
+          syncAll();
+        });
+        // Bouton PLEIN ÉCRAN (haut droite) — délègue au plein écran natif Wistia.
+        const fBtn = mkBtn('Plein écran', 'right');
+        const fIco = document.createElement('span'); fIco.style.cssText = 'display:flex;align-items:center;justify-content:center;'; fIco.innerHTML = TWFS; fBtn.appendChild(fIco);
+        fBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); e.preventDefault();
+          try {
+            const req = el.requestFullscreen || el.webkitRequestFullscreen || el.webkitEnterFullscreen;
+            if (req) req.call(el);
+            else { const sv = el.shadowRoot && el.shadowRoot.querySelector('video'); if (sv) (sv.requestFullscreen || sv.webkitRequestFullscreen || sv.webkitEnterFullscreen).call(sv); }
+          } catch (err) {}
+        });
+        card.appendChild(sBtn);
+        card.appendChild(fBtn);
+      });
+    };
+    this._wireWistiaCtrlsT = setInterval(this._wireWistiaCtrls, 1200);
+    this._wireWistiaCtrls();
+    // Filet de sécurité : resynchronise les icônes son avec l'état réel des
+    // lecteurs (le mode GIF peut re-muter un clip sorti de l'écran).
+    this._sndSyncT = setInterval(() => { (this._sndSyncs || []).forEach((fn) => { try { fn(); } catch (e) {} }); }, 1000);
     // Plein écran natif : quand un clip y entre, on fige le carrousel ; à la
     // sortie, on recoupe le son et on relance le GIF muet proprement.
     this._onFsChange = () => {
@@ -1436,27 +1531,56 @@ class Component extends DCLogic {
       // la vidéo s'affiche (dans l'arbre de la page elle rend noir).
       const portal = document.createElement('div');
       portal.id = 'skHeroPortal';
-      portal.style.cssText = 'position:fixed;z-index:5;border-radius:22px;overflow:hidden;background:#050505;pointer-events:auto;display:none;';
+      portal.style.cssText = 'position:absolute;z-index:5;border-radius:22px;overflow:hidden;background:#050505;pointer-events:auto;display:none;';
       portal.innerHTML = '<wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>'
-        + '<button id="skHeroSound" aria-label="Activer le son" style="position:absolute;right:12px;bottom:12px;z-index:6;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(10,20,16,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><span id="skHeroSoundIcon">🔇</span></button>';
+        + '<button id="skHeroSound" aria-label="Activer le son" style="position:absolute;left:14px;top:14px;z-index:6;width:44px;height:44px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);box-shadow:0 4px 16px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;"><span id="skHeroSoundIcon" style="display:flex;align-items:center;justify-content:center;"></span></button>'
+        + '<button id="skHeroFs" aria-label="Plein écran" style="position:absolute;right:14px;top:14px;z-index:6;width:44px;height:44px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);box-shadow:0 4px 16px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;"><span id="skHeroFsIcon" style="display:flex;align-items:center;justify-content:center;"></span></button>';
       document.body.appendChild(portal);
       const hero = portal.querySelector('#skHeroVid');
       const sndBtn = portal.querySelector('#skHeroSound');
       const sndIcon = portal.querySelector('#skHeroSoundIcon');
       const shadowVid = () => { try { return hero.shadowRoot && hero.shadowRoot.querySelector('video'); } catch (e) { return null; } };
-      const setIcon = () => { const sv = shadowVid(); const m = sv ? sv.muted : true; if (sndIcon) sndIcon.textContent = m ? '🔇' : '🔊'; if (sndBtn) sndBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); };
+      const SND_MUTED = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>';
+      const SND_ON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M19 6a9 9 0 0 1 0 12"/></svg>';
+      const setIcon = () => { const sv = shadowVid(); const m = sv ? sv.muted : true; if (sndIcon) sndIcon.innerHTML = m ? SND_MUTED : SND_ON; if (sndBtn) sndBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); };
+      sndBtn.addEventListener('mouseenter', () => { sndBtn.style.transform = 'scale(1.08)'; sndBtn.style.background = 'rgba(255,255,255,.22)'; });
+      sndBtn.addEventListener('mouseleave', () => { sndBtn.style.transform = 'scale(1)'; sndBtn.style.background = 'rgba(255,255,255,.14)'; });
       sndBtn.addEventListener('click', (ev) => {
         ev.stopPropagation();
         const sv = shadowVid(); if (!sv) return;
         sv.muted = !sv.muted; if (!sv.muted) { sv.volume = 1; try { hero.play && hero.play(); } catch (e) {} }
         setIcon();
       });
+      const fsBtn = portal.querySelector('#skHeroFs');
+      const fsIcon = portal.querySelector('#skHeroFsIcon');
+      const FS_OPEN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+      const FS_CLOSE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+      const setFsIcon = () => { if (fsIcon) fsIcon.innerHTML = document.fullscreenElement ? FS_CLOSE : FS_OPEN; if (fsBtn) fsBtn.setAttribute('aria-label', document.fullscreenElement ? 'Quitter le plein écran' : 'Plein écran'); };
+      fsBtn.addEventListener('mouseenter', () => { fsBtn.style.transform = 'scale(1.08)'; fsBtn.style.background = 'rgba(255,255,255,.22)'; });
+      fsBtn.addEventListener('mouseleave', () => { fsBtn.style.transform = 'scale(1)'; fsBtn.style.background = 'rgba(255,255,255,.14)'; });
+      fsBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        try {
+          if (document.fullscreenElement) { document.exitFullscreen && document.exitFullscreen(); return; }
+          const tgt = hero || portal;
+          const req = tgt.requestFullscreen || tgt.webkitRequestFullscreen || tgt.webkitEnterFullscreen;
+          if (req) { req.call(tgt); }
+          else { const sv = shadowVid(); if (sv) { (sv.requestFullscreen || sv.webkitRequestFullscreen || sv.webkitEnterFullscreen).call(sv); } }
+        } catch (e) {}
+      });
+      document.addEventListener('fullscreenchange', setFsIcon);
+      setFsIcon();
+      // Coordonnées DOCUMENT (rect + scroll) : le portail est position:absolute
+      // donc il scrolle nativement avec la page (aucun décalage/lag pendant le
+      // défilement inertiel). Le rAF ne fait que corriger si la mise en page
+      // bouge (images qui chargent au-dessus).
       this._syncHeroPortal = () => {
         const r = slot.getBoundingClientRect();
-        const onScreen = r.bottom > -40 && r.top < window.innerHeight + 40 && r.width > 0;
+        const onScreen = r.bottom > -window.innerHeight && r.top < window.innerHeight * 2 && r.width > 0;
         if (!onScreen) { if (portal.style.display !== 'none') portal.style.display = 'none'; return; }
         portal.style.display = 'block';
-        portal.style.left = r.left + 'px'; portal.style.top = r.top + 'px';
+        portal.style.left = (r.left + window.scrollX) + 'px';
+        portal.style.top = (r.top + window.scrollY) + 'px';
         portal.style.width = r.width + 'px'; portal.style.height = r.height + 'px';
       };
       this._syncHeroPortal();
