@@ -446,10 +446,10 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
   .dalleportal .dp-word{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;font-family:'Space Mono',monospace;font-size:clamp(12px,1.6vw,15px);letter-spacing:0.22em;text-transform:uppercase;color:#8FE9BF;white-space:nowrap;}
   .dalleportal.dp-in .dp-word{animation:skaleos-portalword 1.05s ease both;animation-delay:.25s;}
   @keyframes skaleos-portalword{0%{opacity:0;transform:translate(-50%,-50%) translateY(10px);}45%{opacity:1;transform:translate(-50%,-50%) translateY(0);}100%{opacity:0;}}
-  /* Pluie de billets dans le portail vert */
+  /* Pluie de symboles € dans le portail vert */
   .dprain{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
-  .dpbill{position:absolute;top:-18%;left:var(--x,50%);width:clamp(30px,7.4vw,46px);height:clamp(19px,4.6vw,29px);border-radius:4px;opacity:0;will-change:transform,opacity;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(11px,2.6vw,15px);color:#0b3d2b;background:linear-gradient(135deg,#b6eccd 0%,#7fdba7 48%,#57c78d 100%);box-shadow:0 6px 14px rgba(0,0,0,.28),inset 0 0 0 1.4px rgba(11,61,43,.4),inset 0 0 0 3.4px rgba(255,255,255,.28);}
-  .dpbill::after{content:'€';opacity:.85;}
+  .dpbill{position:absolute;top:-18%;left:var(--x,50%);opacity:0;will-change:transform,opacity;font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(30px,6.4vw,58px);line-height:1;color:#8FE9BF;text-shadow:0 2px 10px rgba(0,0,0,.35),0 0 18px rgba(143,233,191,.35);}
+  .dpbill::after{content:'€';}
   .dalleportal.dp-in .dpbill{animation:skaleos-billfall var(--dur,2.6s) cubic-bezier(.45,.05,.55,.95) var(--delay,0s) both;}
   @keyframes skaleos-billfall{0%{opacity:0;transform:translate3d(0,-24vh,0) rotate(var(--r0,-20deg));}7%{opacity:1;}90%{opacity:1;}100%{opacity:0;transform:translate3d(var(--dx,0px),120vh,0) rotate(var(--r1,340deg));}}
   @media(prefers-reduced-motion:reduce){.dalleportal.dp-in .dpbill{animation:none;opacity:0;}}
@@ -1493,9 +1493,12 @@ class Component extends DCLogic {
           b.type = 'button';
           b.className = 'skglass';
           b.setAttribute('aria-label', label);
-          b.style.cssText = 'position:absolute;top:10px;' + side + ':10px;z-index:7;width:34px;height:34px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 3px 12px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;';
-          b.addEventListener('mouseenter', () => { b.style.transform = 'scale(1.1)'; b.style.background = 'rgba(255,255,255,.22)'; });
-          b.addEventListener('mouseleave', () => { b.style.transform = 'scale(1)'; b.style.background = 'rgba(255,255,255,.14)'; });
+          // PAS de backdrop-filter ici : ces boutons défilent avec le carrousel
+          // et sur iOS un blur "live" par bouton relancé à chaque frame fait
+          // ramer toute la zone. Fond translucide sombre -> même look, coût ~0.
+          b.style.cssText = 'position:absolute;top:10px;' + side + ':10px;z-index:7;width:34px;height:34px;border-radius:50%;border:.5px solid rgba(255,255,255,.32);background:rgba(16,26,21,.5);box-shadow:0 3px 12px rgba(0,0,0,.3),inset 0 .5px 0 rgba(255,255,255,.4);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;';
+          b.addEventListener('mouseenter', () => { b.style.transform = 'scale(1.1)'; b.style.background = 'rgba(16,26,21,.66)'; });
+          b.addEventListener('mouseleave', () => { b.style.transform = 'scale(1)'; b.style.background = 'rgba(16,26,21,.5)'; });
           // Ne pas laisser le tap démarrer un drag du carrousel.
           b.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
           return b;
