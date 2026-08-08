@@ -644,8 +644,8 @@
       <img class="agora-m" src="assets/mobile-dalle-pressed.jpg" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;opacity:{{ pressOpacity }};transition:opacity .12s ease-out;pointer-events:none;will-change:opacity;">
 
 
-      <a class="agora-d" href="{{ icloseHref }}" onMouseDown="{{ onStoneDown }}" onMouseUp="{{ onStoneUp }}" onMouseLeave="{{ onStoneUp }}" onTouchStart="{{ onStoneDown }}" onTouchEnd="{{ onStoneUp }}" onClick="{{ onStoneClick }}" aria-label="Franchir la dalle" style="position:absolute;left:34.5%;top:50.2%;width:29.6%;height:29.4%;z-index:4;display:block;text-decoration:none;clip-path:polygon(15.5% 3%, 86.5% 3%, 100% 98%, 0% 100%);background:{{ stoneTint }};transition:background .25s ease;cursor:pointer;"></a>
-      <a class="agora-m" href="{{ icloseHref }}" onMouseDown="{{ onStoneDown }}" onMouseUp="{{ onStoneUp }}" onMouseLeave="{{ onStoneUp }}" onTouchStart="{{ onStoneDown }}" onTouchEnd="{{ onStoneUp }}" onClick="{{ onStoneClick }}" aria-label="Franchir la dalle" style="position:absolute;left:33%;top:47.5%;width:32%;height:18%;transform-origin:50% 60%;animation:skaleos-plaquesqueeze 3.4s ease-in-out infinite;z-index:4;display:none;text-decoration:none;background:{{ stoneTint }};transition:background .25s ease;cursor:pointer;"></a>
+      <a class="agora-d" href="{{ icloseHref }}" onPointerDown="{{ onStoneDown }}" onPointerUp="{{ onStoneClick }}" onPointerCancel="{{ onStoneUp }}" onPointerLeave="{{ onStoneUp }}" onClick="{{ onStoneClick }}" aria-label="Franchir la dalle" style="position:absolute;left:34.5%;top:50.2%;width:29.6%;height:29.4%;z-index:4;display:block;text-decoration:none;clip-path:polygon(15.5% 3%, 86.5% 3%, 100% 98%, 0% 100%);background:{{ stoneTint }};transition:background .25s ease;cursor:pointer;touch-action:manipulation;"></a>
+      <a class="agora-m" href="{{ icloseHref }}" onPointerDown="{{ onStoneDown }}" onPointerUp="{{ onStoneClick }}" onPointerCancel="{{ onStoneUp }}" onPointerLeave="{{ onStoneUp }}" onClick="{{ onStoneClick }}" aria-label="Franchir la dalle" style="position:absolute;left:33%;top:47.5%;width:32%;height:18%;transform-origin:50% 60%;animation:skaleos-plaquesqueeze 3.4s ease-in-out infinite;z-index:4;display:none;text-decoration:none;background:{{ stoneTint }};transition:background .25s ease;cursor:pointer;touch-action:manipulation;"></a>
 
       <sc-if value="{{ stonePressed }}" hint-placeholder-val="{{ false }}">
         <div class="dustwrap" style="position:absolute;left:50%;top:79%;width:0;height:0;z-index:5;pointer-events:none;transform-origin:50% 50%;">
@@ -1768,7 +1768,8 @@ class Component extends DCLogic {
     const burgerBot = navOpen ? 'translateY(-6.8px) rotate(-45deg)' : 'none';
     const burgerMidOp = navOpen ? 0 : 1;
     const stonePressed = !!this.state.stonePressed;
-    const onStoneDown = () => {
+    const onStoneDown = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
       try { if (navigator.vibrate) navigator.vibrate(12); } catch (err) { /* pas de vibreur */ }
       this.setState({ stonePressed: true });
     };
