@@ -547,6 +547,9 @@
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
       <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
         <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+        <button id="skHeroCover" aria-label="Lire la vidéo" style="position:absolute;inset:0;z-index:6;border:0;padding:0;margin:0;cursor:pointer;background:#050505 center/cover no-repeat url('assets/wistia/wqdh0pom7s.jpg');display:flex;align-items:center;justify-content:center;">
+          <span style="width:74px;height:74px;border-radius:50%;background:rgba(143,233,191,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,.4);"><span style="width:0;height:0;margin-left:6px;border-left:24px solid #04231a;border-top:15px solid transparent;border-bottom:15px solid transparent;"></span></span>
+        </button>
       </div>
     </div>
     </div></div>
@@ -1417,19 +1420,40 @@ class Component extends DCLogic {
     // Vidéo hero : lecture auto en silencieux. Le bouton 🔇/🔊 (visible en
     // bas à droite) active/coupe le son. Dès qu'on quitte la zone (scroll
     // hors champ) : son coupé + pause. Au retour : repart en silencieux.
-    // Vidéo hero : lecteur Wistia standard (miniature + bouton play, son et
-    // plein écran natifs au tap). On met juste en pause si on quitte la zone
-    // pendant la lecture, pour ne pas entendre le son en dehors de l'écran.
+    // Vidéo hero : une miniature (image, jamais noire) + bouton play. Au tap,
+    // on lance la vidéo AVEC le son en plein écran natif -- fiable partout,
+    // contrairement à la lecture inline de Wistia qui rend noir sur certains
+    // appareils (frames décodées mais non peintes à l'écran).
     this._wireHero = () => {
       const hero = document.getElementById('skHeroVid');
+      const cover = document.getElementById('skHeroCover');
       if (!hero || hero._skWired) return;
       hero._skWired = true;
-      this._heroObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) { try { hero.pause && hero.pause(); } catch (e) {} }
-        });
-      }, { threshold: 0.2 });
-      this._heroObserver.observe(hero);
+      const shadowVid = () => { try { return hero.shadowRoot && hero.shadowRoot.querySelector('video'); } catch (e) { return null; } };
+      if (cover) cover.addEventListener('click', (ev) => {
+        ev.preventDefault(); ev.stopPropagation();
+        const sv = shadowVid();
+        try { if (sv) { sv.muted = false; sv.volume = 1; } hero.play && hero.play(); } catch (e) {}
+        cover.style.display = 'none';
+        try {
+          if (hero.requestFullscreen) hero.requestFullscreen();
+          else if (hero.webkitRequestFullscreen) hero.webkitRequestFullscreen();
+          else if (sv && sv.webkitEnterFullscreen) sv.webkitEnterFullscreen();
+          else if (sv && sv.requestFullscreen) sv.requestFullscreen();
+        } catch (e) {}
+      });
+      // À la sortie du plein écran : on remet la miniature et on coupe le son.
+      const onFs = () => {
+        const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+        if (!fsEl && cover) {
+          const sv = shadowVid();
+          try { if (sv) sv.muted = true; hero.pause && hero.pause(); } catch (e) {}
+          cover.style.display = 'flex';
+        }
+      };
+      document.addEventListener('fullscreenchange', onFs);
+      document.addEventListener('webkitfullscreenchange', onFs);
+      const sv0 = shadowVid(); if (sv0) sv0.addEventListener('webkitendfullscreen', onFs);
     };
     this._wireHeroT = setInterval(this._wireHero, 1500);
     this._wireHero();
