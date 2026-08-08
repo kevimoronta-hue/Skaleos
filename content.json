@@ -1,0 +1,45 @@
+{
+  "colors": { "primary": "#13b37d", "dark": "#0E2620", "accent": "#8FE9BF" },
+  "text": {
+    "heroSubtitle": "J'aide les coachs et infopreneurs à mieux convertir les leads qu'ils génèrent déjà  sans changer d'offre ni d'équipe.",
+    "ctaPrimaryLabel": "Réserver mon analyse",
+    "ctaSecondaryLabel": "Nos cas clients",
+    "ctaBannerLabel": "La première étape est offerte",
+    "ctaBannerSub": "30 minutes · sans engagement",
+    "navMethode": "Méthode",
+    "navCases": "Études de cas",
+    "navTestimonials": "Témoignages",
+    "navCtaLabel": "Audit OFFERT",
+    "navMobileCta": "Réserver mon audit offert"
+  },
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales",
+    "email": "mailto:corentin@skaleos.fr",
+    "instagram": "https://www.instagram.com/corentin_lvn_"
+  },
+  "methodSteps": [
+    { "t": "Appel stratégique de 30 minutes", "d": "Dès que tu réserves un appel avec moi, on analyse ta situation et on identifie les premiers points qui te font perdre de l'argent dans ta stratégie d'acquisition." },
+    { "t": "Dessiner les fondations", "d": "Je te propose ensuite un audit complet d'environ 1h30, qui décortique l'entièreté de ta mécanique de vente et de conversion pour voir où tu perds du chiffre. L'objectif est de trouver toutes les optimisations invisibles au premier appel. Même si on ne travaille pas ensemble après, tu repars avec un diagnostic complet et exploitable." },
+    { "t": "Construction du système", "d": "Si tu décides de travailler avec moi après la détection des optimisations, on met en place et on adapte tout le système cartographié." },
+    { "t": "Test et validation", "d": "On vérifie que tout ce qu'on a mis en place fonctionne bien et on finit d'optimiser ce qu'on détecte sur les données terrain. Cette phase dure environ 2 mois pour être entièrement complète." },
+    { "t": "Amélioration continue", "d": "Si tu souhaites que je reste pas loin, je te propose une offre de suivi, ça peut rassurer d'avoir un expert sous la main (mais rien d'obligatoire)." }
+  ],
+  "caseStudies": [
+    {
+      "key": "yadulink", "person": "Kevin", "company": "Yadulink",
+      "biz": "Business d'accompagnement en vente",
+      "logoSrc": "assets/logo-yadulink.webp",
+      "avatarSrc": "assets/face-kevin.jpg",
+      "quote": "« Avant, on gérait tout à la main, en Google Sheet, on perdait des infos, on ne savait plus qui fait quoi. Aujourd'hui je sais exactement à chaque étape du funnel où je perds de la conversion. Le premier bénéfice que je vois, c'est la sérénité. »",
+      "points": ["+20 ans d'expérience en vente", "Aucun suivi de ses performances commerciales", "Aucun système de mesure de ses meilleurs canaux d'acquisition"]
+    },
+    {
+      "key": "nomad", "person": "Florian", "company": "Nomad Academy",
+      "biz": "Accompagnement pour devenir digital nomad",
+      "logoSrc": "assets/partners/yazee.png",
+      "avatarSrc": "assets/face-florian.png",
+      "quote": "« Dès que tu commences à avoir un setter, un closer, une équipe, c'est un gain de temps conséquent. T'as tout au même endroit. Ça calcule même automatiquement les statistiques. »",
+      "points": ["Équipe sales en forte croissance, mais performance invisible", "Aucune mesure fiable du scaling en cours", "Aucune alerte en temps réel quand un lead rentre — risque de le laisser filer"]
+    }
+  ]
+}
