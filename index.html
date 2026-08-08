@@ -546,7 +546,7 @@
     <div class="vidpin" ref="{{ vidPinRef }}"><div class="vidsticky">
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
       <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
-        <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+        <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
       </div>
     </div>
     </div></div>
@@ -1417,25 +1417,18 @@ class Component extends DCLogic {
     // Vidéo hero : lecture auto en silencieux. Le bouton 🔇/🔊 (visible en
     // bas à droite) active/coupe le son. Dès qu'on quitte la zone (scroll
     // hors champ) : son coupé + pause. Au retour : repart en silencieux.
-    // Vidéo hero : autoplay muet géré par Wistia (silent-auto-play). Le son et
-    // le plein écran passent par les contrôles NATIFS Wistia (tap sur la
-    // vidéo). On garde juste une règle : hors de la zone, on coupe le son et on
-    // met en pause ; au retour, ça repart en muet.
+    // Vidéo hero : lecteur Wistia standard (miniature + bouton play, son et
+    // plein écran natifs au tap). On met juste en pause si on quitte la zone
+    // pendant la lecture, pour ne pas entendre le son en dehors de l'écran.
     this._wireHero = () => {
       const hero = document.getElementById('skHeroVid');
       if (!hero || hero._skWired) return;
       hero._skWired = true;
-      const shadowVid = () => { try { return hero.shadowRoot && hero.shadowRoot.querySelector('video'); } catch (e) { return null; } };
       this._heroObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          const sv = shadowVid();
-          if (entry.isIntersecting) {
-            try { hero.play && hero.play(); } catch (e) {}
-          } else {
-            try { if (sv) sv.muted = true; hero.pause && hero.pause(); } catch (e) {}
-          }
+          if (!entry.isIntersecting) { try { hero.pause && hero.pause(); } catch (e) {} }
         });
-      }, { threshold: 0.35 });
+      }, { threshold: 0.2 });
       this._heroObserver.observe(hero);
     };
     this._wireHeroT = setInterval(this._wireHero, 1500);
