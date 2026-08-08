@@ -41,7 +41,7 @@
 <!-- Google Analytics 4 : remplacer G-XXXXXXXXXX par votre ID de mesure -->
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://skaleos.fr/#org","name":"Skaleos","url":"https://skaleos.fr/","logo":"https://skaleos.fr/assets/skaleos-logo.png","description":"Structuration commerciale pour coachs et infopreneurs : système de vente centralisé, suivi du funnel, automatisations.","areaServed":"FR","founder":{"@type":"Person","name":"Corentin Lavenan","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"]},"email":"corentin.lavenan@gmail.com","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"],"offers":{"@type":"Offer","name":"Audit stratégique offert","price":"0","priceCurrency":"EUR","description":"30 minutes pour identifier où tu perds des leads dans ton funnel."}},{"@type":"WebSite","@id":"https://skaleos.fr/#website","url":"https://skaleos.fr/","name":"Skaleos","inLanguage":"fr-FR","publisher":{"@id":"https://skaleos.fr/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Combien de temps avant de voir des résultats ?","acceptedAnswer":{"@type":"Answer","text":"Le diagnostic se fait dès le premier appel. Si on travaille ensemble, on commence par un appel d'audit qui apporte déjà des résultats concrets."}},{"@type":"Question","name":"Faut-il changer mes outils actuels ?","acceptedAnswer":{"@type":"Answer","text":"Non. Je m'appuie sur tes outils existants pour construire le système et t'en recommande si besoin."}},{"@type":"Question","name":"C'est fait pour qui ?","acceptedAnswer":{"@type":"Answer","text":"Pour les coachs et infopreneurs qui ont déjà un flux de leads et idéalement un setter ou un closer en place."}},{"@type":"Question","name":"Comment se passe le premier appel ?","acceptedAnswer":{"@type":"Answer","text":"30 minutes pour identifier où tu perds le plus de leads. Sans engagement."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://skaleos.fr/#org","name":"Skaleos","url":"https://skaleos.fr/","logo":"https://skaleos.fr/assets/skaleos-logo.png","description":"Structuration commerciale pour coachs et infopreneurs : système de vente centralisé, suivi du funnel, automatisations.","areaServed":"FR","founder":{"@type":"Person","name":"Corentin Lavenan","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"]},"email":"corentin@skaleos.fr","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"],"offers":{"@type":"Offer","name":"Audit stratégique offert","price":"0","priceCurrency":"EUR","description":"30 minutes pour identifier où tu perds des leads dans ton funnel."}},{"@type":"WebSite","@id":"https://skaleos.fr/#website","url":"https://skaleos.fr/","name":"Skaleos","inLanguage":"fr-FR","publisher":{"@id":"https://skaleos.fr/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Combien de temps avant de voir des résultats ?","acceptedAnswer":{"@type":"Answer","text":"Le diagnostic se fait dès le premier appel. Si on travaille ensemble, on commence par un appel d'audit qui apporte déjà des résultats concrets."}},{"@type":"Question","name":"Faut-il changer mes outils actuels ?","acceptedAnswer":{"@type":"Answer","text":"Non. Je m'appuie sur tes outils existants pour construire le système et t'en recommande si besoin."}},{"@type":"Question","name":"C'est fait pour qui ?","acceptedAnswer":{"@type":"Answer","text":"Pour les coachs et infopreneurs qui ont déjà un flux de leads et idéalement un setter ou un closer en place."}},{"@type":"Question","name":"Comment se passe le premier appel ?","acceptedAnswer":{"@type":"Answer","text":"30 minutes pour identifier où tu perds le plus de leads. Sans engagement."}}]}]}</script>
 <script src="image-slot.js"></script>
 <script src="https://app.iclosed.io/assets/widget.js" async=""></script>
 <script src="https://fast.wistia.com/player.js" async=""></script>
@@ -243,8 +243,8 @@
   @media(max-width:760px){
     #scale-btn{height:auto;}
     #scale-btn{height:200svh;view-timeline:--agora block;}
-    .agorapin{position:sticky;top:0;height:100dvh;display:block;overflow:hidden;}
-    .agorapin .agora{width:100%;height:100dvh !important;aspect-ratio:9/16 !important;}
+    .agorapin{position:sticky;top:0;height:100svh;display:block;overflow:hidden;}
+    .agorapin .agora{width:100%;height:100svh !important;aspect-ratio:9/16 !important;}
     .agorapin .agorainner{position:absolute !important;inset:0 !important;left:0 !important;top:0 !important;width:100% !important;height:100% !important;aspect-ratio:auto !important;transform:none !important;object-fit:cover !important;}
     .agorapin .agora img{object-fit:cover !important;width:100% !important;height:100% !important;object-position:center center !important;}
     .agorapin .agoracap{top:clamp(88px,17vh,175px) !important;width:92% !important;}
@@ -607,7 +607,7 @@
                       </div>
 
           <div style="position:relative;width:100%;aspect-ratio:16 / 9;border-radius:20px;overflow:hidden;background-color:#0d1512;background-image:{{ cs.ytThumbBg }};background-size:cover;background-position:center;border:1px solid rgba(143,233,191,.16);display:flex;align-items:center;justify-content:center;grid-area:video;">
-            <sc-if value="{{ cs.ytThumb }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ csShowVideo }}" hint-placeholder-val="{{ false }}">
               <iframe src="{{ cs.ytEmbed }}" title="Témoignage {{ cs.person }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen=""></iframe>
             </sc-if>
             <sc-if value="{{ csNoThumb }}" hint-placeholder-val="{{ true }}">
@@ -905,7 +905,7 @@
       </div>
     </div>
     <div class="footrow" style="max-width:1280px;margin:0 auto;padding:0 32px 30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'Space Mono',monospace;font-size:12px;color:#9a9388;">
-      <span style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">© 2026 Skaleos<span style="opacity:.55;">·</span><span style="font-size:11px;">Powered by <a href="https://scalia.do" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">scalia</a></span></span>
+      <span style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">© 2026 Skaleos</span>
       <span><a href="Skaleos - Mentions legales.dc.html" style="color:inherit;text-decoration:underline;">Mentions légales</a> · <a href="Skaleos - Confidentialite.dc.html" style="color:inherit;text-decoration:underline;">Confidentialité</a></span>
     </div>
   </footer>
@@ -1181,7 +1181,7 @@ class Component extends DCLogic {
         const vhw = window.innerHeight;
         const pTraw = (vhw - prc.top) / (vhw + total);
         const pT = Math.max(0, Math.min(1, (pTraw - 0.05) / 0.42));
-        this._vzP += (pT - this._vzP) * 0.1;
+        this._vzP += (pT - this._vzP) * 0.2;
         if (pT >= 0.999 || Math.abs(pT - this._vzP) < 0.0008) this._vzP = pT;
         const p = this._vzP;
         if (window.innerWidth <= 760) {
@@ -1202,12 +1202,11 @@ class Component extends DCLogic {
           if (pn) {
             const r2 = 28 * (1 - p) + 0;
             pn.style.borderRadius = r2 + 'px';
-            const innerH = Math.min(h, w * 9 / 16);
             pn.style.width = w + 'px';
-            pn.style.height = innerH + 'px';
+            pn.style.height = h + 'px';
             pn.style.position = 'absolute';
             pn.style.left = '0';
-            pn.style.top = ((h - innerH) / 2) + 'px';
+            pn.style.top = '0';
           }
           this._vidRaf = requestAnimationFrame(vidTick);
           return;
@@ -1328,7 +1327,7 @@ class Component extends DCLogic {
       el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
       el.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !s.dragging) resumeLater(); });
       el.addEventListener('pointerdown', (e) => {
-        if (e.target.closest && e.target.closest('image-slot')) { pause(); resumeLater(); return; }
+        if (e.target.closest && e.target.closest('image-slot,wistia-player,.twfsbtn')) { pause(); resumeLater(); return; }
         pause(); s.dragging = true; s.lastX = e.clientX; s.id = e.pointerId; s.moved = false;
       });
       el.addEventListener('pointermove', (e) => {
@@ -1645,7 +1644,7 @@ class Component extends DCLogic {
     const hasVideo = !!vu;
     const ytId = this.props.heroVideoYoutubeId ?? 'HWeTrJ1Oo_g';
     const hasYt = !hasVideo && !!ytId;
-    const ytSrc = hasYt ? ('https://www.youtube.com/embed/' + ytId + '?autoplay=1&mute=1&loop=1&playlist=' + ytId + '&controls=1&rel=0&playsinline=1&modestbranding=1') : '';
+    const ytSrc = hasYt ? ('https://www.youtube.com/embed/' + ytId + '?autoplay=1&loop=1&playlist=' + ytId + '&controls=1&rel=0&playsinline=1&modestbranding=1') : '';
     const ytPoster = ytId ? ('https://img.youtube.com/vi/' + ytId + '/maxresdefault.jpg') : '';
     const vidPanelBg = hasYt ? ('#050505 url(' + ytPoster + ')') : '#050505';
     const showPlayBtn = !hasYt;
@@ -1783,7 +1782,7 @@ class Component extends DCLogic {
         this.lastThud = now;
         this.actx = this.actx || new AC();
         const ctx = this.actx;
-        if (ctx.state === 'suspended') ctx.resume();
+        const build = () => {
         const t = ctx.currentTime;
         const comp = ctx.createDynamicsCompressor();
         comp.threshold.value = -14; comp.knee.value = 26; comp.ratio.value = 7; comp.attack.value = 0.004; comp.release.value = 0.32;
@@ -1834,6 +1833,9 @@ class Component extends DCLogic {
         rg.gain.exponentialRampToValueAtTime(0.0001, t + 1.9);
         rsrc.connect(lp).connect(rg).connect(comp);
         rsrc.start(t); rsrc.stop(t + 2);
+        };
+        if (ctx.state === 'suspended') ctx.resume().then(build).catch(() => {});
+        else build();
       } catch (err) { /* audio indisponible */ }
     };
     const onStoneClick = (e) => {
@@ -1891,7 +1893,9 @@ class Component extends DCLogic {
     });
     const csI = ((this.state.csIdx || 0) % csCases.length + csCases.length) % csCases.length;
     const cs = csCases[csI];
-    const csNoThumb = !cs.ytThumb;
+    const csReady = !this._csBusy;
+    const csShowVideo = !!cs.ytThumb && csReady;
+    const csNoThumb = !cs.ytThumb && csReady;
     const csDots = csCases.map((c, i) => ({ n: String(i + 1), cls: i === csI ? 'csdot on' : 'csdot', onPick: () => { if (i !== csI && !this._csBusy) csGo(i - csI); } }));
     const csDx = this.state.csDx || 0;
     const csDragging = !!this.state.csDragging;
@@ -1977,7 +1981,7 @@ class Component extends DCLogic {
         this._fsSaved = null;
       }
     };
-    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
+    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csShowVideo, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
   }
 }
 </script>
