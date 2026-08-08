@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -227,6 +228,7 @@
     .agora-d{display:none !important;}
     .agora-m{display:block !important;object-fit:cover !important;width:100% !important;height:100% !important;}
     a.agora-m{display:block !important;width:100% !important;height:100% !important;}
+    .agorapin .dustwrap{top:63% !important;transform:scale(.8) !important;}
   }
   @media(max-width:520px){
     .btn{padding:16px 26px;font-size:14px;min-height:44px;display:inline-flex;align-items:center;gap:8px;}
@@ -356,9 +358,12 @@
   @keyframes skaleos-plaquesqueeze{0%,72%,100%{transform:scale(1,1);}78%{transform:scale(1.05,.9);}84%{transform:scale(.97,1.04);}90%{transform:scale(1.02,.98);}}
   @keyframes skaleos-agorapan{0%{transform:scale(1.06) translateX(-0.4%) rotate(0deg);}50%{transform:scale(1.06) translateX(0.4%) rotate(0deg);}100%{transform:scale(1.06) translateX(-0.4%) rotate(0deg);}}
   .agora.quake{animation:skaleos-quake 1.25s cubic-bezier(.36,.07,.19,.97) both;}
+  .agora::after{content:'';position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 58%,rgba(255,241,205,.75) 0%,rgba(255,236,190,.28) 34%,transparent 62%);}
+  .agora.quake::after{animation:skaleos-impactflash .55s ease-out both;}
+  @keyframes skaleos-impactflash{0%{opacity:0;}12%{opacity:1;}100%{opacity:0;}}
   @media(max-width:768px){.agora img{animation:none !important;will-change:auto;}}
   @keyframes skaleos-pageshake{0%{transform:translate3d(0,0,0);}10%{transform:translate3d(-5px,2px,0);}22%{transform:translate3d(4px,-3px,0);}34%{transform:translate3d(-3px,2px,0);}48%{transform:translate3d(3px,-1px,0);}64%{transform:translate3d(-2px,1px,0);}82%{transform:translate3d(1px,-1px,0);}100%{transform:translate3d(0,0,0);}}
-  html.pageshake{animation:skaleos-pageshake .6s cubic-bezier(.36,.07,.19,.97) both;}
+  @media(min-width:761px){html.pageshake{animation:skaleos-pageshake .6s cubic-bezier(.36,.07,.19,.97) both;overflow-x:clip;}}
   @keyframes skaleos-labelshake{0%{transform:translate3d(0,0,0);}10%{transform:translate3d(-6px,3px,0);}22%{transform:translate3d(5px,-2px,0);}34%{transform:translate3d(-4px,2px,0);}48%{transform:translate3d(3px,-1px,0);}64%{transform:translate3d(-2px,1px,0);}82%{transform:translate3d(1px,0,0);}100%{transform:translate3d(0,0,0);}}
   .agoracap h2.quake{display:inline-block;animation:skaleos-labelshake .7s cubic-bezier(.36,.07,.19,.97) both;}
   @keyframes skaleos-capspawn{from{opacity:0;transform:translate(-50%,30px) scale(.92);filter:blur(7px);}to{opacity:1;transform:translate(-50%,0) scale(1);filter:blur(0);}}
