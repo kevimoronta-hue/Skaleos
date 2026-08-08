@@ -17,6 +17,12 @@
 <link rel="preload" as="image" href="assets/agora-pressed.jpg" fetchpriority="low" media="(min-width: 761px)">
 <link rel="preload" as="image" href="assets/mobile-dalle-normal.jpg" fetchpriority="low" media="(max-width: 760px)">
 <link rel="preload" as="image" href="assets/mobile-dalle-pressed.jpg" fetchpriority="low" media="(max-width: 760px)">
+<link rel="preload" as="image" href="assets/yt/nWewM3Mpr5o.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/yt/C41WcoMRwmQ.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/wistia/cc5oq0ls1r.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/wistia/78qplhkpbe.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/wistia/94tineazxz.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/wistia/qtccki73ws.jpg" fetchpriority="low">
 <title>Skaleos — Le système qui te dit où tu perds des ventes | Structuration commerciale</title>
 <meta name="description" content="Skaleos structure ton système de vente : identifie où tu perds des leads à chaque étape de ton funnel, automatise le suivi et pilote ton équipe sales au même endroit. Audit stratégique offert de 30 min, sans engagement.">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -48,6 +54,25 @@
 <style>
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  /* --- Retour tactile premium : plus de flash bleu Android, plus de délai 300ms --- */
+  a,button,[role="button"],.cschip,.bslot,.bcday,.csarrow,.playtri,.twfsbtn,.scalecta,.bookcta,.agora-m,.agora-d{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  button,[role="button"],.cschip,.csarrow,.playtri,.twfsbtn,.scalecta,.btn,.btn-nav{
+    -webkit-user-select:none;user-select:none;
+  }
+  /* Enfoncement franc et instantané au doigt (100ms), retour doux au relâchement */
+  .btn:active,.btn-nav:active,.scalecta:active,.cschip:active,.bslot:active{
+    transform:translateY(1px) scale(.975);
+    transition-duration:.09s;
+  }
+  .csarrow:active,.twfsbtn:active{transform:scale(.92);transition-duration:.09s;}
+  .playtri:active{transform:translate(-50%,-50%) scale(.93);transition-duration:.09s;}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+  }
   h1,h2,h3,h4{font-family:'Artifika',Georgia,serif;font-weight:400 !important;}
   body{margin:0;background:#F4F4F2;}
   ::selection{background:#8FE9BF;color:#0E2620;}
@@ -56,7 +81,7 @@
   @media(max-width:768px){
     .mtrack,.ttrack{will-change:transform;animation-duration:60s !important;}
     .tta,.ttb{animation-duration:60s !important;}
-    button,a[class*="btn"]{margin:8px 4px;}
+    .btn,.btn-nav{margin:8px 4px;}
     .ctachk{gap:16px;}
     .bookslots{gap:12px;}
     .btnup{display:none !important;}
@@ -233,8 +258,7 @@
   @media(max-width:520px){
     .btn{padding:16px 26px;font-size:14px;min-height:44px;display:inline-flex;align-items:center;gap:8px;}
     .btn-nav{padding:14px 24px;min-height:44px;}
-    button{min-height:44px;min-width:44px;}
-    a[class*="btn"]{min-height:44px;padding:16px 26px !important;}
+    .scalecta,.bookcta,.cschip{min-height:44px;}
   }
   @media(max-width:760px){
     .heroinner h1{font-size:clamp(22px,7vw,46px) !important;line-height:1.18 !important;gap:0.2em !important;margin-bottom:clamp(20px,3.2vh,30px) !important;}
@@ -251,9 +275,10 @@
   .ttb{animation:skaleos-marquee-x 50s linear infinite reverse;}
   .tw{flex:none;height:clamp(360px,40vw,520px);aspect-ratio:9 / 16;border-radius:20px;overflow:hidden;}
   .twv{position:relative;}
-  .twfsbtn{position:absolute;top:10px;left:10px;z-index:6;width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(10,20,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .25s ease;}
+  .twfsbtn{position:absolute;top:10px;left:10px;z-index:6;width:34px;height:34px;min-width:0;min-height:0;margin:0;padding:0;border-radius:11px;border:1px solid rgba(255,255,255,.28);background:rgba(10,20,16,.32);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);color:#fff;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.72;transition:background .25s ease,opacity .25s ease,transform .25s ease;}
+  .twfsbtn:hover{opacity:1;transform:scale(1.06);}
   .twfsbtn:hover{background:rgba(19,179,125,.75);}
-  .twfsbtn::before{content:'';width:15px;height:15px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M8 21H4a1 1 0 0 1-1-1v-4M16 21h4a1 1 0 0 0 1-1v-4'/></svg>") center/contain no-repeat;}
+  .twfsbtn::before{content:'';width:16px;height:16px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27white%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M8%203H4a1%201%200%200%200-1%201v4M16%203h4a1%201%200%200%201%201%201v4M8%2021H4a1%201%200%200%201-1-1v-4M16%2021h4a1%201%200%200%200%201-1v-4%27%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;}
   .twfs{position:fixed !important;inset:0 !important;width:100vw !important;height:100vh !important;height:100svh !important;aspect-ratio:auto !important;border-radius:0 !important;background:#000;z-index:9999;}
   .twfs .twfsbtn::before{content:'✕';width:auto;height:auto;background:none;}
   .twfs .twfsbtn{top:calc(14px + env(safe-area-inset-top));left:14px;right:auto;width:46px;height:46px;font-size:20px;background:rgba(10,20,16,.8);z-index:2147483000;}
@@ -581,7 +606,7 @@
             </div>
                       </div>
 
-          <div style="position:relative;width:100%;aspect-ratio:16 / 9;border-radius:20px;overflow:hidden;background:#0d1512;border:1px solid rgba(143,233,191,.16);display:flex;align-items:center;justify-content:center;grid-area:video;">
+          <div style="position:relative;width:100%;aspect-ratio:16 / 9;border-radius:20px;overflow:hidden;background-color:#0d1512;background-image:{{ cs.ytThumbBg }};background-size:cover;background-position:center;border:1px solid rgba(143,233,191,.16);display:flex;align-items:center;justify-content:center;grid-area:video;">
             <sc-if value="{{ cs.ytThumb }}" hint-placeholder-val="{{ false }}">
               <iframe src="{{ cs.ytEmbed }}" title="Témoignage {{ cs.person }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen=""></iframe>
             </sc-if>
@@ -745,7 +770,7 @@
         <div class="mtrack tta" style="gap:10px;padding-right:10px;align-items:stretch;">
           <sc-for list="{{ rowA }}" as="t" hint-placeholder-count="6">
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
-              <div class="tw twv">
+              <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
                   <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                   <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
@@ -786,7 +811,7 @@
         <div class="mtrack ttb" style="gap:10px;padding-right:10px;align-items:stretch;">
           <sc-for list="{{ rowB }}" as="t" hint-placeholder-count="6">
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
-              <div class="tw twv">
+              <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
                   <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                   <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
@@ -1607,7 +1632,7 @@ class Component extends DCLogic {
     const metrics = [['15k€', '40k€/mois'], ['0€', '20k€/mois'], ['10k€', '50k€/mois'], ['20k€', '45k€/mois'], ['300k€', '700k€/an'], ['7k€', '25k€/mois'], ['0€', '30k€/mois'], ['12k€', '35k€/mois'], ['10k€', '60k€/mois']];
     const Q = T2.map((t, i) => ({ ...t, from: metrics[i][0], to: metrics[i][1] }));
     const q = (i, type) => ({ ...Q[i], isVideo: false, isGreen: type === 'g', isWhite: type === 'w' });
-    const vid = (i, name, role, from, to, wistiaId) => ({ isVideo: true, isGreen: false, isWhite: false, name, role, from, to, slot: 'twall-vid-' + i, wistiaId, noWistia: !wistiaId });
+    const vid = (i, name, role, from, to, wistiaId) => ({ isVideo: true, isGreen: false, isWhite: false, name, role, from, to, slot: 'twall-vid-' + i, wistiaId, noWistia: !wistiaId, poster: wistiaId ? ('url(assets/wistia/' + wistiaId + '.jpg)') : 'none' });
     const dupRow = a => a.concat(a);
     const rowA = dupRow([vid(0, 'Estelle', '', '', '', 'cc5oq0ls1r'), q(0, 'w'), vid(1, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(4, 'g'), vid(4, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(1, 'w')]);
     const rowB = dupRow([vid(2, 'Kevin', 'CEO, Yadulink', '', '', 'qtccki73ws'), q(3, 'g'), vid(3, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(7, 'w'), vid(5, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(8, 'g')]);
@@ -1844,7 +1869,7 @@ class Component extends DCLogic {
         logoSrc: 'assets/logo-yadulink.webp',
         avatarSrc: 'assets/face-kevin.jpg',
         quote: "\u00ab Avant, on gérait tout à la main, en Google Sheet, on perdait des infos, on ne savait plus qui fait quoi. Aujourd'hui je sais exactement à chaque étape du funnel où je perds de la conversion. Le premier bénéfice que je vois, c'est la sérénité. \u00bb",
-        videoUrl: 'https://youtu.be/nWewM3Mpr5o', ytThumb: 'https://img.youtube.com/vi/nWewM3Mpr5o/maxresdefault.jpg', ytThumbBg: 'url(https://img.youtube.com/vi/nWewM3Mpr5o/maxresdefault.jpg)',
+        videoUrl: 'https://youtu.be/nWewM3Mpr5o', ytThumb: 'assets/yt/nWewM3Mpr5o.jpg', ytThumbBg: 'url(assets/yt/nWewM3Mpr5o.jpg)',
         points: ["+20 ans d'expérience en vente", "Aucun suivi de ses performances commerciales", "Aucun système de mesure de ses meilleurs canaux d'acquisition"],
       },
       {
@@ -1853,7 +1878,7 @@ class Component extends DCLogic {
         logoSrc: 'assets/partners/yazee.png',
         avatarSrc: 'assets/face-florian.png',
         quote: "\u00ab D\u00e8s que tu commences \u00e0 avoir un setter, un closer, une \u00e9quipe, c'est un gain de temps cons\u00e9quent. T'as tout au m\u00eame endroit. \u00c7a calcule m\u00eame automatiquement ce qu'on doit payer \u00e0 toute l'\u00e9quipe sales, c'est juste trop fort. Tout le monde devrait avoir au moins un syst\u00e8me comme \u00e7a dans son business. \u00bb",
-        videoUrl: 'https://youtu.be/C41WcoMRwmQ', ytThumb: 'https://img.youtube.com/vi/C41WcoMRwmQ/maxresdefault.jpg', ytThumbBg: 'url(https://img.youtube.com/vi/C41WcoMRwmQ/maxresdefault.jpg)',
+        videoUrl: 'https://youtu.be/C41WcoMRwmQ', ytThumb: 'assets/yt/C41WcoMRwmQ.jpg', ytThumbBg: 'url(assets/yt/C41WcoMRwmQ.jpg)',
         points: ["Équipe sales en forte croissance, mais performance invisible", "Aucune mesure fiable du scaling en cours", "Aucune alerte en temps réel quand un lead rentre — risque de le laisser filer"],
       },
     ].map((c) => {
