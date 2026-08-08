@@ -245,7 +245,7 @@
        exactement le même fond/flou que la pilule au lieu d'un carré blanc
        à part. */
     header{
-      position:sticky !important;top:10px !important;
+      position:fixed !important;top:10px !important;left:0 !important;right:0 !important;
       margin:0 12px !important;width:calc(100% - 24px) !important;
       border-radius:999px !important;
       border:1px solid rgba(255,255,255,.5) !important;
@@ -253,6 +253,16 @@
       backdrop-filter:blur(20px) saturate(1.6) !important;
       -webkit-backdrop-filter:blur(20px) saturate(1.6) !important;
       box-shadow:0 10px 34px rgba(14,38,32,.14),inset 0 1px 0 rgba(255,255,255,.7) !important;
+      overflow:hidden !important;
+    }
+    /* Menu ouvert : la pilule s'étire en carte arrondie qui contient le
+       menu -- même fond verre, mais nettement plus opaque pour que le
+       texte reste lisible par-dessus la photo hero une fois la carte
+       bien plus haute que la pilule fermée. */
+    header.nav-open{
+      border-radius:28px !important;
+      background:rgba(244,244,242,.94) !important;
+      box-shadow:0 20px 50px rgba(14,38,32,.22),inset 0 1px 0 rgba(255,255,255,.8) !important;
     }
     header nav{padding:9px 10px 9px 20px !important;}
     .burger{
@@ -263,6 +273,9 @@
       -webkit-backdrop-filter:none !important;
     }
     .burger[style-active]:active,.burger:active{background:rgba(14,38,32,.08) !important;}
+    /* Header en overlay (position:fixed) : il ne réserve plus d'espace, donc
+       l'image du hero démarre naturellement tout en haut, sous la pilule. */
+    .herosec{top:0 !important;min-height:100svh !important;padding-top:calc(var(--navh,66px) + clamp(24px,3.5vh,46px)) !important;}
   }
   @media(max-width:760px){
     #scale-btn{height:auto;}
@@ -416,12 +429,19 @@
   .agora::after{content:'';position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 58%,rgba(255,241,205,.75) 0%,rgba(255,236,190,.28) 34%,transparent 62%);}
   .agora.quake::after{animation:skaleos-impactflash .55s ease-out both;}
   @keyframes skaleos-impactflash{0%{opacity:0;}12%{opacity:1;}100%{opacity:0;}}
-  .dalleportal{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:1;background:radial-gradient(circle at var(--dpx,50%) var(--dpy,50%),#1c5943 0%,#0E2620 46%,#050c09 100%);clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));-webkit-clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));}
+  .dalleportal{position:fixed;inset:0;z-index:100000;pointer-events:none;opacity:1;background:radial-gradient(circle at var(--dpx,50%) var(--dpy,50%),#1c5943 0%,#0E2620 46%,#050c09 100%);clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));-webkit-clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));}
   .dalleportal.dp-in{transition:clip-path 1.05s cubic-bezier(.65,0,.35,1),-webkit-clip-path 1.05s cubic-bezier(.65,0,.35,1);clip-path:circle(150% at var(--dpx,50%) var(--dpy,50%));-webkit-clip-path:circle(150% at var(--dpx,50%) var(--dpy,50%));}
   .dalleportal.dp-out{transition:opacity .75s ease;opacity:0;}
   .dalleportal .dp-word{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;font-family:'Space Mono',monospace;font-size:clamp(12px,1.6vw,15px);letter-spacing:0.22em;text-transform:uppercase;color:#8FE9BF;white-space:nowrap;}
   .dalleportal.dp-in .dp-word{animation:skaleos-portalword 1.05s ease both;animation-delay:.25s;}
   @keyframes skaleos-portalword{0%{opacity:0;transform:translate(-50%,-50%) translateY(10px);}45%{opacity:1;transform:translate(-50%,-50%) translateY(0);}100%{opacity:0;}}
+  /* Pluie de billets dans le portail vert */
+  .dprain{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+  .dpbill{position:absolute;top:-18%;left:var(--x,50%);width:clamp(30px,7.4vw,46px);height:clamp(19px,4.6vw,29px);border-radius:4px;opacity:0;will-change:transform,opacity;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(11px,2.6vw,15px);color:#0b3d2b;background:linear-gradient(135deg,#b6eccd 0%,#7fdba7 48%,#57c78d 100%);box-shadow:0 6px 14px rgba(0,0,0,.28),inset 0 0 0 1.4px rgba(11,61,43,.4),inset 0 0 0 3.4px rgba(255,255,255,.28);}
+  .dpbill::after{content:'€';opacity:.85;}
+  .dalleportal.dp-in .dpbill{animation:skaleos-billfall var(--dur,2.6s) cubic-bezier(.45,.05,.55,.95) var(--delay,0s) both;}
+  @keyframes skaleos-billfall{0%{opacity:0;transform:translate3d(0,-24vh,0) rotate(var(--r0,-20deg));}7%{opacity:1;}90%{opacity:1;}100%{opacity:0;transform:translate3d(var(--dx,0px),120vh,0) rotate(var(--r1,340deg));}}
+  @media(prefers-reduced-motion:reduce){.dalleportal.dp-in .dpbill{animation:none;opacity:0;}}
   @media(max-width:768px){.agora img{animation:none !important;will-change:auto;}}
   @keyframes skaleos-pageshake{0%{transform:translate3d(0,0,0);}10%{transform:translate3d(-5px,2px,0);}22%{transform:translate3d(4px,-3px,0);}34%{transform:translate3d(-3px,2px,0);}48%{transform:translate3d(3px,-1px,0);}64%{transform:translate3d(-2px,1px,0);}82%{transform:translate3d(1px,-1px,0);}100%{transform:translate3d(0,0,0);}}
   @media(min-width:761px){html.pageshake{animation:skaleos-pageshake .6s cubic-bezier(.36,.07,.19,.97) both;overflow-x:clip;}}
@@ -452,7 +472,7 @@
   <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#EEF6F0;background-image:linear-gradient(#07674b1f 1px,transparent 1px),linear-gradient(90deg,#07674b1f 1px,transparent 1px);background-size:52px 52px;"></div>
   <div style="position:fixed;left:50%;top:-260px;transform:translateX(-50%);width:960px;height:640px;z-index:-1;pointer-events:none;background:radial-gradient(closest-side,#8FE9BF42,transparent 70%);filter:blur(34px);"></div>
 
-  <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease,backdrop-filter 0.35s ease,-webkit-backdrop-filter 0.35s ease,border-bottom-color 0.35s ease;">
+  <header ref="{{ headerRef }}" class="{{ navOpenCls }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease,backdrop-filter 0.35s ease,-webkit-backdrop-filter 0.35s ease,border-bottom-color 0.35s ease,border-radius 0.35s ease;">
     <nav style="max-width:1280px;margin:0 auto;padding:19px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:padding 0.35s ease;">
       <a href="#" style="display:flex;align-items:center;text-decoration:none;">
         <img src="assets/skaleos-logo.png" alt="Skaleos" style="height:34px;width:auto;display:block;">
@@ -473,7 +493,7 @@
     </nav>
     <div style="display:grid;grid-template-rows:{{ mobRows }};overflow:hidden;transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1);">
       <div style="overflow:hidden;min-height:0;opacity:{{ mobOpacity }};transition:opacity .32s ease {{ mobFadeDelay }};">
-      <div style="display:flex;flex-direction:column;gap:2px;padding:14px 22px 22px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(238,246,240,.52));backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);border-top:1px solid rgba(255,255,255,.7);box-shadow:0 24px 48px rgba(14,38,32,.14),inset 0 1px 0 rgba(255,255,255,.85);">
+      <div style="display:flex;flex-direction:column;gap:2px;padding:6px 22px 22px;border-top:1px solid rgba(14,38,32,.1);">
         <a href="#methode" onClick="{{ onNavClose }}" style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#0E2620;text-decoration:none;padding:17px 4px;border-bottom:1px solid rgba(14,38,32,.09);">{{ navMethode }}</a>
         <a href="#realisations" onClick="{{ onNavClose }}" style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#0E2620;text-decoration:none;padding:17px 4px;border-bottom:1px solid rgba(14,38,32,.09);">{{ navCases }}</a>
         <a href="#temoignages" onClick="{{ onNavClose }}" style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#0E2620;text-decoration:none;padding:17px 4px;border-bottom:1px solid rgba(14,38,32,.09);">{{ navTestimonials }}</a>
@@ -485,7 +505,7 @@
 
   
 
-  <section style="position:sticky;top:71px;min-height:calc(100vh - 71px);padding:clamp(14px,2.4vh,34px) 24px 30px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;">
+  <section class="herosec" style="position:sticky;top:71px;min-height:calc(100vh - 71px);padding:clamp(14px,2.4vh,34px) 24px 30px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;">
     <img class="heroimg" src="assets/hero-temple-pool.png" alt="" loading="eager" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:54% 74%;z-index:0;opacity:.97;filter:saturate(1) contrast(1.08) brightness(1.12);-webkit-mask-image:radial-gradient(130% 105% at 50% 62%,#000 46%,rgba(0,0,0,.4) 80%,transparent 100%);mask-image:radial-gradient(130% 105% at 50% 62%,#000 46%,rgba(0,0,0,.4) 80%,transparent 100%);">
     <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:#EEF6F0;mix-blend-mode:color;opacity:.18;"></div>
     <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(#07674b1a 1px,transparent 1px),linear-gradient(90deg,#07674b1a 1px,transparent 1px);background-size:52px 52px;opacity:.32;"></div>
@@ -525,7 +545,7 @@
     <div class="vidpin" ref="{{ vidPinRef }}"><div class="vidsticky">
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
       <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
-        <wistia-player media-id="wqdh0pom7s" aspect="1.7777777777777777" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+        <wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
       </div>
     </div>
     </div></div>
@@ -791,7 +811,7 @@
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
               <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
-                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" playbar="false" play-button="false" small-play-button="false" fullscreen-button="false" volume-control="false" settings-control="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                   <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
                 </sc-if>
                 <sc-if value="{{ t.noWistia }}" hint-placeholder-val="{{ true }}">
@@ -832,7 +852,7 @@
             <sc-if value="{{ t.isVideo }}" hint-placeholder-val="{{ false }}">
               <div class="tw twv" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
-                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
+                  <wistia-player media-id="{{ t.wistiaId }}" aspect="0.5625" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" playbar="false" play-button="false" small-play-button="false" fullscreen-button="false" volume-control="false" settings-control="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
                   <button class="twfsbtn" onClick="{{ onVidFs }}" aria-label="Plein écran"></button>
                 </sc-if>
                 <sc-if value="{{ t.noWistia }}" hint-placeholder-val="{{ true }}">
@@ -928,7 +948,7 @@
       <span><a href="Skaleos - Mentions legales.dc.html" style="color:inherit;text-decoration:underline;">Mentions légales</a> · <a href="Skaleos - Confidentialite.dc.html" style="color:inherit;text-decoration:underline;">Confidentialité</a></span>
     </div>
   </footer>
-  <div class="dalleportal" ref="{{ portalRef }}" aria-hidden="true"><span class="dp-word">Franchis la porte</span></div>
+  <div class="dalleportal" ref="{{ portalRef }}" aria-hidden="true"><div class="dprain"><span class="dpbill" style="--x:6%;--dx:22px;--dur:2.5s;--delay:0s;--r0:-24deg;--r1:320deg;"></span><span class="dpbill" style="--x:15%;--dx:-18px;--dur:3.1s;--delay:.5s;--r0:18deg;--r1:-300deg;"></span><span class="dpbill" style="--x:24%;--dx:30px;--dur:2.7s;--delay:.9s;--r0:-10deg;--r1:380deg;"></span><span class="dpbill" style="--x:33%;--dx:-24px;--dur:2.9s;--delay:.2s;--r0:26deg;--r1:-260deg;"></span><span class="dpbill" style="--x:42%;--dx:16px;--dur:2.4s;--delay:1.1s;--r0:-30deg;--r1:300deg;"></span><span class="dpbill" style="--x:50%;--dx:-30px;--dur:3.3s;--delay:.4s;--r0:12deg;--r1:-340deg;"></span><span class="dpbill" style="--x:58%;--dx:24px;--dur:2.6s;--delay:1.4s;--r0:-16deg;--r1:360deg;"></span><span class="dpbill" style="--x:66%;--dx:-20px;--dur:3s;--delay:.7s;--r0:22deg;--r1:-280deg;"></span><span class="dpbill" style="--x:74%;--dx:28px;--dur:2.5s;--delay:.1s;--r0:-28deg;--r1:330deg;"></span><span class="dpbill" style="--x:82%;--dx:-16px;--dur:3.2s;--delay:1s;--r0:14deg;--r1:-320deg;"></span><span class="dpbill" style="--x:90%;--dx:20px;--dur:2.8s;--delay:.6s;--r0:-12deg;--r1:300deg;"></span><span class="dpbill" style="--x:11%;--dx:-26px;--dur:2.7s;--delay:1.6s;--r0:20deg;--r1:-360deg;"></span><span class="dpbill" style="--x:29%;--dx:18px;--dur:3.1s;--delay:1.3s;--r0:-22deg;--r1:340deg;"></span><span class="dpbill" style="--x:47%;--dx:-28px;--dur:2.6s;--delay:1.8s;--r0:28deg;--r1:-300deg;"></span><span class="dpbill" style="--x:63%;--dx:22px;--dur:3s;--delay:1.5s;--r0:-18deg;--r1:320deg;"></span><span class="dpbill" style="--x:79%;--dx:-22px;--dur:2.5s;--delay:1.9s;--r0:16deg;--r1:-340deg;"></span><span class="dpbill" style="--x:38%;--dx:26px;--dur:2.9s;--delay:2.1s;--r0:-26deg;--r1:360deg;"></span><span class="dpbill" style="--x:70%;--dx:-18px;--dur:2.7s;--delay:2.3s;--r0:24deg;--r1:-320deg;"></span></div><span class="dp-word">Franchis la porte</span></div>
 </div>
 
 
@@ -1313,39 +1333,66 @@ class Component extends DCLogic {
     };
     document.addEventListener('click', this._anchorNav);
     this._playingWistia = new Set();
-      // Décode/joue uniquement les lecteurs proches de l'écran -- avec ~12
-      // wistia-player dans le mur qui défile, en laisser 12 décoder hors
-      // champ plombait le scroll. Testé le retrait/réinsertion du DOM pour
-      // couper le décodage plus radicalement : ça casse l'état interne du
-      // lecteur Wistia à la reconnexion ("renderButton is not a function").
-      // On reste donc sur pause()/play() -- Wistia relance parfois son
-      // aperçu tout seul peu après, mais ça reste net gagnant (moins de
-      // lecteurs actifs en même temps) sans risquer de lecteur cassé.
+      // Mode "GIF" du mur de témoignages : chaque clip joue en muet, en
+      // boucle, sans contrôles (via les attributs sur le <wistia-player>).
+      // On pilote lecture/pause au fil de la visibilité pour la perf : mute
+      // + play() quand le lecteur approche de l'écran, pause() quand il
+      // s'éloigne. On laisse l'utilisateur garder la main sur une vidéo
+      // ouverte volontairement avec le son.
+      this._gifPlay = (el) => {
+        // Wistia démarre parfois seulement à la 2e/3e tentative (le lecteur
+        // n'est pas encore prêt) -- d'où le "parfois ça marche, parfois non".
+        // On réessaie quelques fois tant que le clip n'est pas en lecture.
+        clearTimeout(el._gifKickT);
+        let tries = 0;
+        const kick = () => {
+          if (!el.isConnected) return;
+          if (this._playingWistia && this._playingWistia.has(el)) return;
+          const r = el.getBoundingClientRect();
+          if (r.bottom < -50 || r.top > window.innerHeight + 50) return; // sorti de l'écran
+          try { el.muted = true; } catch (err) {}
+          try { el.play && el.play(); } catch (err) {}
+          if (el.state !== 'playing' && tries++ < 12) el._gifKickT = setTimeout(kick, 450);
+        };
+        kick();
+      };
       this._wistiaVizObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           const el = entry.target;
           if (this._playingWistia && this._playingWistia.has(el)) return;
-          if (entry.isIntersecting) { try { el.play && el.play(); } catch (err) {} }
+          if (entry.isIntersecting) { this._gifPlay(el); }
           else { try { el.pause && el.pause(); } catch (err) {} }
         });
-      }, { rootMargin: '150px 0px', threshold: 0.15 });
+      }, { rootMargin: '200px 0px', threshold: 0 });
     this._wireWistia = () => {
-      document.querySelectorAll('wistia-player').forEach((el) => {
+      document.querySelectorAll('.tw.twv wistia-player').forEach((el) => {
         if (el._skWired) return;
         el._skWired = true;
         this._wistiaVizObserver.observe(el);
-        const lock = () => {
-          document.querySelectorAll('wistia-player').forEach((o) => { if (o !== el && typeof o.pause === 'function') { try { o.pause(); } catch (err) {} } });
-          this._playingWistia.add(el); (this._marq || []).forEach(s => { s.videoLock = true; s.paused = true; clearTimeout(s.resumeT); });
-        };
-        const maybeUnlock = () => { this._playingWistia.delete(el); if (this._playingWistia.size === 0) (this._marq || []).forEach(s => { s.videoLock = false; if (!s.fsLock && !s.dragging) s.paused = false; }); };
-        el.addEventListener('play', lock);
-        el.addEventListener('pause', maybeUnlock);
-        el.addEventListener('ended', maybeUnlock);
       });
     };
     this._wireWistiaT = setInterval(this._wireWistia, 1200);
     this._wireWistia();
+    // Vidéo hero : lecture auto en silencieux. Un clic active le son ; dès
+    // qu'on quitte la zone (scroll hors champ), on recoupe le son et on met
+    // en pause, et au retour ça repart en silencieux.
+    this._wireHero = () => {
+      const hero = document.getElementById('skHeroVid');
+      if (!hero || hero._skWired) return;
+      hero._skWired = true;
+      const kickMuted = () => { let n = 0; const k = () => { try { hero.muted = true; hero.play && hero.play(); } catch (e) {} if (hero.state !== 'playing' && n++ < 12) setTimeout(k, 450); }; k(); };
+      hero.addEventListener('click', () => { try { hero.muted = false; hero.play && hero.play(); } catch (e) {} });
+      this._heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { kickMuted(); }
+          else { try { hero.muted = true; hero.pause && hero.pause(); } catch (e) {} }
+        });
+      }, { threshold: 0.35 });
+      this._heroObserver.observe(hero);
+      kickMuted();
+    };
+    this._wireHeroT = setInterval(this._wireHero, 1200);
+    this._wireHero();
     this._syncNavH = () => {
       const h = document.querySelector('header');
       if (h) document.documentElement.style.setProperty('--navh', Math.round(h.getBoundingClientRect().height) + 'px');
@@ -1805,6 +1852,7 @@ class Component extends DCLogic {
       };
     });
     const navOpen = !!this.state.navOpen;
+    const navOpenCls = navOpen ? 'nav-open' : '';
     const mobRows = navOpen ? '1fr' : '0fr';
     const mobOpacity = navOpen ? 1 : 0;
     const mobFadeDelay = navOpen ? '.08s' : '0s';
@@ -1902,6 +1950,10 @@ class Component extends DCLogic {
       const portal = this.portalRef.current;
       const rect = (e.currentTarget && e.currentTarget.getBoundingClientRect) ? e.currentTarget.getBoundingClientRect() : null;
       if (portal && rect) {
+        // Le portail est imbriqué dans un div qui l'empêche de passer par
+        // dessus le header (contexte d'empilement séparé). On le remonte
+        // en enfant direct de <body> pour qu'il recouvre vraiment tout.
+        if (portal.parentNode !== document.body) document.body.appendChild(portal);
         portal.style.setProperty('--dpx', (rect.left + rect.width / 2) + 'px');
         portal.style.setProperty('--dpy', (rect.top + rect.height / 2) + 'px');
         portal.style.pointerEvents = 'auto';
@@ -1910,19 +1962,21 @@ class Component extends DCLogic {
         portal.classList.add('dp-in');
       }
       const target = this.props.icloseUrl || '#rdv';
+      // On laisse l'iris se remplir (~1s) puis les billets pleuvoir un moment
+      // avant de sauter (invisible, derrière le portail plein) et révéler.
       setTimeout(() => {
         if (target.startsWith('#')) {
           const el = document.querySelector(target);
           if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, left: 0, behavior: 'instant' });
           if (portal) {
-            setTimeout(() => portal.classList.add('dp-out'), 140);
-            setTimeout(() => { portal.classList.remove('dp-in', 'dp-out'); portal.style.pointerEvents = 'none'; }, 940);
+            setTimeout(() => portal.classList.add('dp-out'), 250);
+            setTimeout(() => { portal.classList.remove('dp-in', 'dp-out'); portal.style.pointerEvents = 'none'; }, 1200);
           }
         } else {
           window.location.href = target;
         }
-      }, 1050);
-      setTimeout(() => { this.stoneGoing = false; this.setState({ stonePressed: false }); }, 2200);
+      }, 2100);
+      setTimeout(() => { this.stoneGoing = false; this.setState({ stonePressed: false }); }, 3400);
     };
     const bookUrl = this.props.icloseUrl || '';
     const bookHref = bookUrl || 'mailto:hello@skaleos.fr?subject=R%C3%A9server%20mon%20audit%20Skaleos';
@@ -2045,7 +2099,7 @@ class Component extends DCLogic {
         this._fsSaved = null;
       }
     };
-    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csShowVideo, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, portalRef: this.portalRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
+    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csShowVideo, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, navOpenCls, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, portalRef: this.portalRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
   }
 }
 </script>
