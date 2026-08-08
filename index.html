@@ -49,11 +49,13 @@
 <script src="https://fast.wistia.com/embed/78qplhkpbe.js" async="" type="module"></script>
 <script src="https://fast.wistia.com/embed/94tineazxz.js" async="" type="module"></script>
 <script src="https://fast.wistia.com/embed/qtccki73ws.js" async="" type="module"></script>
+<script src="https://fast.wistia.com/embed/wqdh0pom7s.js" async="" type="module"></script>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&amp;display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Artifika&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <style>
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  wistia-player[media-id='wqdh0pom7s']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/wqdh0pom7s/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }
   /* --- Retour tactile premium : plus de flash bleu Android, plus de délai 300ms --- */
   a,button,[role="button"],.cschip,.bslot,.bcday,.csarrow,.playtri,.twfsbtn,.scalecta,.bookcta,.agora-m,.agora-d{
     -webkit-tap-highlight-color:transparent;
@@ -227,7 +229,7 @@
   .box3dload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#13b37d99;pointer-events:none;transition:opacity .5s ease;}
   .box3dload.hide{opacity:0;}
   @media(max-width:860px){.pscene{grid-template-columns:1fr;gap:8px;}.ptext{text-align:center;order:1;}.pbar{margin:20px auto 22px;}.plead{margin-left:auto;margin-right:auto;}.box3dwrap{order:2;height:min(58vh,460px);}}
-  @media(max-width:900px){.frise{max-width:640px;}.frstep{grid-template-columns:68px 1fr;gap:24px;row-gap:20px;padding:60px 0;}.frdot{width:68px;height:68px;font-size:19px;}.frphoto{grid-column:2;width:100%;max-width:440px;}.frbody{grid-column:2;}.frrail{left:32px;}}
+  @media(max-width:900px){.frise{max-width:640px;}.frstep{grid-template-columns:68px 1fr;gap:24px;row-gap:20px;padding:60px 0;align-items:start;}.frdot{width:68px;height:68px;font-size:19px;margin-top:2px;}.frphoto{grid-column:2;width:100%;max-width:440px;}.frbody{grid-column:2;}.frrail{left:32px;}}
   @media(max-width:520px){.frstep{grid-template-columns:56px 1fr;gap:16px;padding:48px 0;}.frdot{width:56px;height:56px;font-size:17px;}.frtitle{font-size:23px;}.frdesc{font-size:15.5px;}.frrail{left:26px;}}
   .hero-nowrap{white-space:nowrap !important;}
   @media(max-width:1180px){.heroinner h1{font-size:clamp(24px,6.9vw,78px) !important;}}
@@ -239,12 +241,34 @@
     .heroinner{min-height:calc(100svh - 150px) !important;}
     .agoracta{display:inline-flex !important;}
     .agoracap h2{font-size:clamp(21px,5.4vw,30px) !important;text-shadow:none !important;}
+    /* Navbar flottante en pilule, ambiance verre -- le burger reprend
+       exactement le même fond/flou que la pilule au lieu d'un carré blanc
+       à part. */
+    header{
+      position:sticky !important;top:10px !important;
+      margin:0 12px !important;width:calc(100% - 24px) !important;
+      border-radius:999px !important;
+      border:1px solid rgba(255,255,255,.5) !important;
+      background:rgba(244,244,242,.55) !important;
+      backdrop-filter:blur(20px) saturate(1.6) !important;
+      -webkit-backdrop-filter:blur(20px) saturate(1.6) !important;
+      box-shadow:0 10px 34px rgba(14,38,32,.14),inset 0 1px 0 rgba(255,255,255,.7) !important;
+    }
+    header nav{padding:9px 10px 9px 20px !important;}
+    .burger{
+      background:transparent !important;
+      border:none !important;
+      box-shadow:none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+    .burger[style-active]:active,.burger:active{background:rgba(14,38,32,.08) !important;}
   }
   @media(max-width:760px){
     #scale-btn{height:auto;}
     #scale-btn{height:200svh;view-timeline:--agora block;}
-    .agorapin{position:sticky;top:0;height:100svh;display:block;overflow:hidden;}
-    .agorapin .agora{width:100%;height:100svh !important;aspect-ratio:9/16 !important;}
+    .agorapin{position:sticky;top:0;height:100svh;display:block;overflow:hidden;transform:translateZ(0);will-change:transform;backface-visibility:hidden;isolation:isolate;}
+    .agorapin .agora{width:100%;height:100svh !important;aspect-ratio:9/16 !important;transform:translateZ(0);}
     .agorapin .agorainner{position:absolute !important;inset:0 !important;left:0 !important;top:0 !important;width:100% !important;height:100% !important;aspect-ratio:auto !important;transform:none !important;object-fit:cover !important;}
     .agorapin .agora img{object-fit:cover !important;width:100% !important;height:100% !important;object-position:center center !important;}
     .agorapin .agoracap{top:clamp(88px,17vh,175px) !important;width:92% !important;}
@@ -343,7 +367,13 @@
   .vidpin{height:165vh;}
   .vidsticky{position:sticky;top:72px;height:calc(100vh - 72px);display:flex;align-items:flex-end;}
   .vidzoom{position:relative;width:min(100%,1020px);aspect-ratio:16/9;}
-  @media(max-width:760px){.vidsec{margin-top:0 !important;}.vidpin{height:140vh;}.vidsticky{align-items:flex-end;}.vidzoom{aspect-ratio:16/9;transition:none;}}
+  @media(max-width:760px){
+    .vidsec{margin-top:0 !important;padding:32px 18px !important;}
+    .vidpin{height:auto !important;}
+    .vidsticky{position:relative !important;top:auto !important;height:auto !important;display:block !important;}
+    .vidzoom{width:100% !important;height:auto !important;aspect-ratio:16/9 !important;margin-left:0 !important;transform:none !important;opacity:1 !important;}
+    .vidzoom .vidpanel{position:relative !important;width:100% !important;height:100% !important;border-radius:22px !important;}
+  }
   .playtri{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(14,38,32,0.32);border:1px solid rgba(143,233,191,0.4);backdrop-filter:blur(8px);z-index:3;padding:0;transition:transform .35s ease,border-color .35s ease;}
   .playtri:hover{transform:translate(-50%,-50%) scale(1.07);border-color:rgba(143,233,191,0.85);}
   .ptrihalo{position:absolute;inset:-26px;border-radius:50%;background:radial-gradient(circle,rgba(143,233,191,0.22) 0%,transparent 68%);animation:skaleos-halo 3.6s ease-in-out infinite;pointer-events:none;}
@@ -494,25 +524,8 @@
   <section class="vidsec" style="position:relative;z-index:3;margin-top:0;padding:0;pointer-events:none;">
     <div class="vidpin" ref="{{ vidPinRef }}"><div class="vidsticky">
     <div class="vidzoom" ref="{{ vidZoomRef }}" style="pointer-events:auto;">
-      <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:{{ vidPanelBg }};background-size:cover;background-position:center;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
-        <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
-          <video ref="{{ videoMount }}" poster="{{ ytPoster }}" autoplay="" muted="" loop="" playsinline="" onClick="{{ onToggleSound }}" style="width:100%;height:100%;object-fit:cover;display:block;background:#050505;cursor:pointer;"></video>
-        </sc-if>
-        <sc-if value="{{ hasYt }}" hint-placeholder-val="{{ false }}">
-          <sc-if value="{{ ytStarted }}" hint-placeholder-val="{{ false }}">
-            <iframe src="{{ ytSrc }}" title="Vidéo Skaleos" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen=""></iframe>
-          </sc-if>
-          <sc-if value="{{ ytNotStarted }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ onStartYt }}" aria-label="Lancer la vidéo" style="position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;background:none;"></button>
-            <button class="playtri" onClick="{{ onStartYt }}" aria-label="Lancer la vidéo" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);"><span class="ptrihalo"></span><span class="ptrihalo2"></span><svg width="26" height="26" viewBox="0 0 24 24" fill="#8FE9BF" style="margin-left:3px;position:relative;"><path d="M7 4.5 L19.5 12 L7 19.5 Z"></path></svg></button>
-          </sc-if>
-        </sc-if>
-        <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#0c1a14 0%,#050505 70%);"></div>
-        </sc-if>
-        <sc-if value="{{ showPlayBtn }}" hint-placeholder-val="{{ true }}">
-        <button class="playtri" onClick="{{ onFullscreen }}" aria-label="Lire en plein écran"><span class="ptrihalo"></span><span class="ptrihalo2"></span><svg width="26" height="26" viewBox="0 0 24 24" fill="#8FE9BF" style="margin-left:3px;position:relative;"><path d="M7 4.5 L19.5 12 L7 19.5 Z"></path></svg></button>
-        </sc-if>
+      <div class="vidpanel" style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#050505;box-shadow:0 30px 80px rgba(0,0,0,0.45);">
+        <wistia-player media-id="wqdh0pom7s" aspect="1.7777777777777777" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>
       </div>
     </div>
     </div></div>
@@ -1193,29 +1206,16 @@ class Component extends DCLogic {
         if (pT >= 0.999 || Math.abs(pT - this._vzP) < 0.0008) this._vzP = pT;
         const p = this._vzP;
         if (window.innerWidth <= 760) {
-          const stickyHm = window.innerHeight - 72;
-          const pw2 = Math.min(1, p / 0.75);
-          const bw = window.innerWidth * 0.62;
-          const w = bw + (window.innerWidth - bw) * p;
-          const h = Math.min((bw * 9 / 16) + (stickyHm - (bw * 9 / 16)) * p, stickyHm);
-          vz.style.width = w + 'px';
-          vz.style.height = h + 'px';
-          vz.style.background = '#000';
-          vz.style.marginLeft = '0px';
-          const rl = vz.getBoundingClientRect().left;
-          vz.style.marginLeft = (((window.innerWidth - w) / 2) - rl) + 'px';
-          vz.style.transform = 'translateY(' + ((1 - pw2) * 10).toFixed(2) + 'vh)';
-          vz.style.opacity = (0.35 + 0.65 * Math.min(1, p / 0.45)).toFixed(3);
-          const pn = vz.querySelector('.vidpanel');
-          if (pn) {
-            const r2 = 28 * (1 - p) + 0;
-            pn.style.borderRadius = r2 + 'px';
-            const innerH = Math.min(h, w * 9 / 16);
-            pn.style.width = w + 'px';
-            pn.style.height = innerH + 'px';
-            pn.style.position = 'absolute';
-            pn.style.left = '0';
-            pn.style.top = ((h - innerH) / 2) + 'px';
+          // Mobile : pas de pin/zoom scroll-driven (créait de grosses bandes
+          // noires quand le cadre grandissait plus vite que la vidéo 16:9
+          // qu'il contient) -- la vidéo reste un simple bloc statique, géré
+          // entièrement par CSS. On efface juste les styles inline une fois.
+          if (!this._vidMobileReset) {
+            vz.style.width = ''; vz.style.height = ''; vz.style.background = '';
+            vz.style.marginLeft = ''; vz.style.transform = ''; vz.style.opacity = '';
+            const pn0 = vz.querySelector('.vidpanel');
+            if (pn0) { pn0.style.borderRadius = ''; pn0.style.width = ''; pn0.style.height = ''; pn0.style.position = ''; pn0.style.left = ''; pn0.style.top = ''; }
+            this._vidMobileReset = true;
           }
           this._vidRaf = requestAnimationFrame(vidTick);
           return;
@@ -1313,10 +1313,27 @@ class Component extends DCLogic {
     };
     document.addEventListener('click', this._anchorNav);
     this._playingWistia = new Set();
+      // Décode/joue uniquement les lecteurs proches de l'écran -- avec ~12
+      // wistia-player dans le mur qui défile, en laisser 12 décoder hors
+      // champ plombait le scroll. Testé le retrait/réinsertion du DOM pour
+      // couper le décodage plus radicalement : ça casse l'état interne du
+      // lecteur Wistia à la reconnexion ("renderButton is not a function").
+      // On reste donc sur pause()/play() -- Wistia relance parfois son
+      // aperçu tout seul peu après, mais ça reste net gagnant (moins de
+      // lecteurs actifs en même temps) sans risquer de lecteur cassé.
+      this._wistiaVizObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const el = entry.target;
+          if (this._playingWistia && this._playingWistia.has(el)) return;
+          if (entry.isIntersecting) { try { el.play && el.play(); } catch (err) {} }
+          else { try { el.pause && el.pause(); } catch (err) {} }
+        });
+      }, { rootMargin: '150px 0px', threshold: 0.15 });
     this._wireWistia = () => {
       document.querySelectorAll('wistia-player').forEach((el) => {
         if (el._skWired) return;
         el._skWired = true;
+        this._wistiaVizObserver.observe(el);
         const lock = () => {
           document.querySelectorAll('wistia-player').forEach((o) => { if (o !== el && typeof o.pause === 'function') { try { o.pause(); } catch (err) {} } });
           this._playingWistia.add(el); (this._marq || []).forEach(s => { s.videoLock = true; s.paused = true; clearTimeout(s.resumeT); });
