@@ -1202,11 +1202,12 @@ class Component extends DCLogic {
           if (pn) {
             const r2 = 28 * (1 - p) + 0;
             pn.style.borderRadius = r2 + 'px';
+            const innerH = Math.min(h, w * 9 / 16);
             pn.style.width = w + 'px';
-            pn.style.height = h + 'px';
+            pn.style.height = innerH + 'px';
             pn.style.position = 'absolute';
             pn.style.left = '0';
-            pn.style.top = '0';
+            pn.style.top = ((h - innerH) / 2) + 'px';
           }
           this._vidRaf = requestAnimationFrame(vidTick);
           return;
@@ -1268,6 +1269,23 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._capCheck, { passive: true });
     setTimeout(this._capCheck, 300);
+    // Scroll fluide et lent partagé par tous les boutons/liens d'ancrage —
+    // remplace le scroll natif du navigateur (rapide, durée non réglable).
+    this._smoothScrollTo = (targetY, duration) => {
+      cancelAnimationFrame(this._scrollRaf);
+      const startY = window.scrollY;
+      const diff = targetY - startY;
+      if (Math.abs(diff) < 1) return;
+      const dur = duration || Math.min(2200, Math.max(900, Math.abs(diff) * 0.85));
+      const t0 = performance.now();
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const step = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        window.scrollTo({ top: startY + diff * ease(p), left: 0, behavior: 'instant' });
+        if (p < 1) this._scrollRaf = requestAnimationFrame(step);
+      };
+      this._scrollRaf = requestAnimationFrame(step);
+    };
     this._anchorNav = (e) => {
       const a = e.target.closest && e.target.closest('a[href^="#"]');
       if (!a) return;
@@ -1283,7 +1301,7 @@ class Component extends DCLogic {
         const pin = document.querySelector('.vidpin');
         if (pin) y = Math.max(y, pin.offsetTop + pin.offsetHeight - off);
       }
-      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      this._smoothScrollTo(Math.max(0, y));
     };
     document.addEventListener('click', this._anchorNav);
     this._playingWistia = new Set();
@@ -1854,7 +1872,7 @@ class Component extends DCLogic {
       setTimeout(() => {
         if (target.startsWith('#')) {
           const el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (el) this._smoothScrollTo(el.getBoundingClientRect().top + window.scrollY, 1600);
         } else {
           window.location.href = target;
         }
