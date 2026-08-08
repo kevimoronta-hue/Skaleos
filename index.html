@@ -1167,10 +1167,17 @@ class Component extends DCLogic {
         const nav = hd.querySelector('nav');
         if (nav) nav.style.padding = on ? '15px 32px' : '19px 32px';
       }
+      // Pendant un scroll programmatique (boutons de nav), on saute tout le
+      // travail lourd qui déclenche des setState/reflows (révélations, frise,
+      // boîte 3D) : c'est ce qui faisait chuter l'animation à ~30 fps. On
+      // resynchronise une seule fois à l'arrivée (voir _smoothScrollTo).
+      if (this._autoScrolling) { this._lastY = y; return; }
       if (!this._rvEls || this._rvEls.length < 6) this._rvEls = Array.from(document.querySelectorAll('[data-rv]'));
       this._rvEls.forEach((el) => {
         const k = el.getAttribute('data-rv');
-        if (!this.state.rv[k] && el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+        // On ne mesure plus les sections déjà révélées (évite des getBoundingClientRect inutiles à chaque frame).
+        if (this.state.rv[k]) return;
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
           this.setState((s) => ({ rv: { ...s.rv, [k]: true } }));
         }
       });
@@ -1178,7 +1185,10 @@ class Component extends DCLogic {
       // remplissage de la barre sont, eux, pilotés en rAF (_updateRail) pour
       // rester fluides même pendant le défilement inertiel iOS.
       const fr = this.friseRef.current;
-      if (fr && this.friseRailRef.current) {
+      // On ne mesure les points de la frise que si elle est proche du viewport
+      // (un seul rect de garde au lieu d'un rect par point à chaque scroll).
+      const frGuard = fr ? fr.getBoundingClientRect() : null;
+      if (fr && this.friseRailRef.current && frGuard && frGuard.bottom > 0 && frGuard.top < window.innerHeight) {
         const midLine = window.innerHeight * 0.6;
         const dots = fr.querySelectorAll('.frdot');
         let changed = false;
@@ -1199,7 +1209,15 @@ class Component extends DCLogic {
       }
       this._lastY = y;
     };
-    window.addEventListener('scroll', this.onScroll, { passive: true });
+    // Coalescence : iOS peut émettre des rafales d'événements scroll ; on ne
+    // lance le handler qu'une fois par frame (dédoublonné via rAF).
+    this._scrollQueued = false;
+    this._onScrollRaf = () => {
+      if (this._scrollQueued) return;
+      this._scrollQueued = true;
+      requestAnimationFrame(() => { this._scrollQueued = false; this.onScroll(); });
+    };
+    window.addEventListener('scroll', this._onScrollRaf, { passive: true });
     // Barre de progression des 5 étapes : mise à jour à chaque frame (rAF)
     // plutôt que sur l'event scroll -- sur iOS les events scroll ne se
     // déclenchent pas pendant l'inertie, ce qui saccadait la barre.
@@ -1222,12 +1240,21 @@ class Component extends DCLogic {
     // boucle fluide pour l'expansion vidéo (lissage rAF)
     this._vzP = 0;
     const vidTick = () => {
-      if (this._updateRail) this._updateRail();
-      if (this._syncHeroPortal) this._syncHeroPortal();
       const pin = this.vidPinRef ? this.vidPinRef.current : null;
       const vz = this.vidZoomRef.current;
+      // Rail des 5 étapes : ne recalculer que si la frise est proche du viewport
+      // (évite des lectures/écritures de layout inutiles à chaque frame).
+      const frEl = this.friseRef.current;
+      if (this._updateRail) {
+        if (!frEl) { this._updateRail(); }
+        else { const frr = frEl.getBoundingClientRect(); if (frr.bottom > -160 && frr.top < window.innerHeight + 160) this._updateRail(); }
+      }
       if (pin && vz) {
         const prc = pin.getBoundingClientRect();
+        // Zoom vidéo scroll-driven : hors écran on ne touche à rien. Ça évite le
+        // reflow synchrone forcé (getBoundingClientRect après écriture de width)
+        // exécuté à chaque frame même quand la section n'est pas visible.
+        if (prc.bottom < -120 || prc.top > window.innerHeight + 120) { this._vidRaf = requestAnimationFrame(vidTick); return; }
         const total = Math.max(1, pin.offsetHeight - window.innerHeight);
         const vhw = window.innerHeight;
         const pTraw = (vhw - prc.top) / (vhw + total);
@@ -1317,10 +1344,12 @@ class Component extends DCLogic {
       const dur = duration || Math.min(2200, Math.max(900, Math.abs(diff) * 0.85));
       const t0 = performance.now();
       const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      this._autoScrolling = true; // allège onScroll pendant l'animation -> 120 fps
       const step = (now) => {
         const p = Math.min(1, (now - t0) / dur);
         window.scrollTo({ top: startY + diff * ease(p), left: 0, behavior: 'instant' });
-        if (p < 1) this._scrollRaf = requestAnimationFrame(step);
+        if (p < 1) { this._scrollRaf = requestAnimationFrame(step); }
+        else { this._autoScrolling = false; this.onScroll(); } // resync révélations/frise à l'arrivée
       };
       this._scrollRaf = requestAnimationFrame(step);
     };
@@ -1532,7 +1561,7 @@ class Component extends DCLogic {
       const portal = document.createElement('div');
       portal.id = 'skHeroPortal';
       portal.style.cssText = 'position:absolute;z-index:5;border-radius:22px;overflow:hidden;background:#050505;pointer-events:auto;display:none;';
-      portal.innerHTML = '<wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>'
+      portal.innerHTML = '<wistia-player id="skHeroVid" media-id="wqdh0pom7s" aspect="1.7777777777777777" muted autoplay silent-auto-play="true" end-video-behavior="loop" controls-visible-on-load="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></wistia-player>'
         + '<button id="skHeroSound" aria-label="Activer le son" style="position:absolute;left:14px;top:14px;z-index:6;width:44px;height:44px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);box-shadow:0 4px 16px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;"><span id="skHeroSoundIcon" style="display:flex;align-items:center;justify-content:center;"></span></button>'
         + '<button id="skHeroFs" aria-label="Plein écran" style="position:absolute;right:14px;top:14px;z-index:6;width:44px;height:44px;border-radius:50%;border:.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);box-shadow:0 4px 16px rgba(0,0,0,.28),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .2s ease;"><span id="skHeroFsIcon" style="display:flex;align-items:center;justify-content:center;"></span></button>';
       document.body.appendChild(portal);
@@ -1570,22 +1599,58 @@ class Component extends DCLogic {
       });
       document.addEventListener('fullscreenchange', setFsIcon);
       setFsIcon();
-      // Coordonnées DOCUMENT (rect + scroll) : le portail est position:absolute
-      // donc il scrolle nativement avec la page (aucun décalage/lag pendant le
-      // défilement inertiel). Le rAF ne fait que corriger si la mise en page
-      // bouge (images qui chargent au-dessus).
+      // Le portail est position:absolute en coordonnées DOCUMENT : il scrolle
+      // donc NATIVEMENT avec la page. On ne réécrit PLUS top/left à chaque frame
+      // (c'était la cause du "on voit le dessous pendant un scroll rapide" : le
+      // calque vidéo composité prenait du retard sur le scroll natif). On ne
+      // repositionne que quand la mise en page peut avoir bougé : resize, load,
+      // rotation, et un filet de sécurité basse fréquence, avec garde anti-écriture
+      // inutile pour éviter tout repaint superflu.
+      let _lastPos = '';
       this._syncHeroPortal = () => {
         const r = slot.getBoundingClientRect();
-        const onScreen = r.bottom > -window.innerHeight && r.top < window.innerHeight * 2 && r.width > 0;
-        if (!onScreen) { if (portal.style.display !== 'none') portal.style.display = 'none'; return; }
-        portal.style.display = 'block';
-        portal.style.left = (r.left + window.scrollX) + 'px';
-        portal.style.top = (r.top + window.scrollY) + 'px';
-        portal.style.width = r.width + 'px'; portal.style.height = r.height + 'px';
+        if (r.width <= 0) return;
+        const L = Math.round(r.left + window.scrollX), T = Math.round(r.top + window.scrollY);
+        const W = Math.round(r.width), H = Math.round(r.height);
+        const sig = L + '|' + T + '|' + W + '|' + H;
+        if (sig === _lastPos) return; // rien n'a bougé -> aucun style écrit
+        _lastPos = sig;
+        portal.style.left = L + 'px'; portal.style.top = T + 'px';
+        portal.style.width = W + 'px'; portal.style.height = H + 'px';
       };
+      // Visibilité (perf) : on ne composite la vidéo que quand la zone hero est
+      // proche du viewport, via IntersectionObserver (aucun coût pendant le scroll).
+      const heroVis = new IntersectionObserver((ents) => {
+        const e = ents[0]; if (!e) return;
+        if (e.isIntersecting) { portal.style.display = 'block'; this._syncHeroPortal(); }
+        else { portal.style.display = 'none'; }
+      }, { rootMargin: '120% 0px' });
+      heroVis.observe(slot);
       this._syncHeroPortal();
+      window.addEventListener('resize', this._syncHeroPortal, { passive: true });
+      window.addEventListener('orientationchange', this._syncHeroPortal);
+      window.addEventListener('load', this._syncHeroPortal);
+      // Filet : corrige un éventuel décalage de layout tardif (polices/images
+      // chargées au-dessus). Écriture seulement si la position a réellement changé.
+      this._heroPosT = setInterval(this._syncHeroPortal, 500);
+      // Autoplay muet robuste : relance quelques fois si Wistia n'a pas démarré
+      // (sinon la miniature/overlay Wistia s'affiche "une fois sur deux").
+      let _hk = 0;
+      const heroKick = () => {
+        const sv = shadowVid();
+        // Déjà en lecture -> on s'arrête (ne JAMAIS re-muter : l'utilisateur a
+        // pu activer le son entre-temps).
+        if (sv && !sv.paused && !sv.ended && sv.currentTime > 0) { clearInterval(this._heroKickT); return; }
+        try { hero.play && hero.play(); } catch (e) {}
+        if (sv) { try { sv.muted = true; sv.play && sv.play(); } catch (e) {} }
+        if (++_hk >= 10) clearInterval(this._heroKickT);
+      };
+      this._heroKickT = setInterval(heroKick, 500);
+      heroKick();
       setIcon();
-      setInterval(setIcon, 1000);
+      this._heroIconT = setInterval(setIcon, 1000);
+      // Le hero est un élément unique : une fois câblé, plus besoin de re-scanner.
+      clearInterval(this._wireHeroT);
     };
     this._wireHeroT = setInterval(this._wireHero, 1500);
     this._wireHero();
@@ -1640,9 +1705,16 @@ class Component extends DCLogic {
       el.addEventListener('pointercancel', end);
       return s;
     });
+    // Perf : n'animer le carrousel que lorsque la section est à l'écran.
+    this._marqVisible = true;
+    const marqSec = document.getElementById('temoignages');
+    if (marqSec && 'IntersectionObserver' in window) {
+      new IntersectionObserver((ents) => { const e = ents[0]; if (e) this._marqVisible = e.isIntersecting; }, { rootMargin: '200px 0px' }).observe(marqSec);
+    }
     let prev = performance.now();
     const tick = (now) => {
       const dt = Math.min((now - prev) / 1000, 0.05); prev = now;
+      if (this._marqVisible === false) { this._marqRaf = requestAnimationFrame(tick); return; }
       this._marq.forEach((s) => {
         if (!s.half) s.half = s.el.scrollWidth / 2;
         if (s.paused || s.dragging || !s.half) return;
