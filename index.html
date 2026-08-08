@@ -158,7 +158,7 @@
   @keyframes skaleos-dotpop{0%{transform:scale(1);}45%{transform:scale(1.16);}100%{transform:scale(1);}}
   .frise{position:relative;max-width:1000px;margin:96px auto 0;text-align:left;}
   .frrail{position:absolute;left:38px;top:0;height:0;width:4px;pointer-events:none;}
-  .frfill{position:absolute;left:0;top:0;width:100%;height:0;background:#0E2620;border-radius:4px;}
+  .frfill{position:absolute;left:0;top:0;width:100%;height:0;background:#0E2620;border-radius:4px;transition:height .35s cubic-bezier(.22,1,.36,1);will-change:height;}
   .frstep{position:relative;display:grid;grid-template-columns:80px 340px 1fr;gap:38px;align-items:center;padding:80px 0;}
   .frstep .frphoto,.frstep .frbody{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
   .frstep .frbody{transition-delay:.1s;}
@@ -378,7 +378,7 @@
   @media(max-width:980px){.csgrid{grid-template-columns:1fr;grid-template-areas:"card" "video";gap:44px;}}
   @media(max-width:600px){.footrow{justify-content:center !important;text-align:center;}.cschip{padding:10px 18px;font-size:14px;}}
   #methode,#realisations,#temoignages,#offre,#faq,#rdv,#scale-btn{scroll-margin-top:84px;}
-  @media(max-width:600px){.footbrand{justify-content:center !important;text-align:center !important;padding-left:32px !important;}.footsoc{width:100%;justify-content:center !important;}}
+  @media(max-width:600px){.footbrand{justify-content:flex-start !important;text-align:left !important;}.footsoc{width:100%;justify-content:flex-start !important;}}
   @keyframes skaleos-quake{0%{transform:scale(1.05) translate3d(0,0,0) rotate(0deg);}6%{transform:scale(1.05) translate3d(-19px,4px,0) rotate(-.22deg);}13%{transform:scale(1.05) translate3d(17px,-4px,0) rotate(.2deg);}21%{transform:scale(1.05) translate3d(-16px,3px,0) rotate(-.18deg);}29%{transform:scale(1.05) translate3d(14px,-3px,0) rotate(.16deg);}38%{transform:scale(1.05) translate3d(-12px,3px,0) rotate(-.13deg);}47%{transform:scale(1.05) translate3d(10px,-2px,0) rotate(.11deg);}56%{transform:scale(1.05) translate3d(-8px,2px,0) rotate(-.08deg);}65%{transform:scale(1.04) translate3d(6px,-1px,0) rotate(.06deg);}74%{transform:scale(1.03) translate3d(-4px,1px,0);}83%{transform:scale(1.02) translate3d(3px,-1px,0);}92%{transform:scale(1.01) translate3d(-2px,0,0);}100%{transform:scale(1) translate3d(0,0,0) rotate(0deg);}}
   @keyframes skaleos-plaquesqueeze{0%,72%,100%{transform:scale(1,1);}78%{transform:scale(1.05,.9);}84%{transform:scale(.97,1.04);}90%{transform:scale(1.02,.98);}}
   @keyframes skaleos-agorapan{0%{transform:scale(1.06) translateX(-0.4%) rotate(0deg);}50%{transform:scale(1.06) translateX(0.4%) rotate(0deg);}100%{transform:scale(1.06) translateX(-0.4%) rotate(0deg);}}
@@ -386,6 +386,12 @@
   .agora::after{content:'';position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 58%,rgba(255,241,205,.75) 0%,rgba(255,236,190,.28) 34%,transparent 62%);}
   .agora.quake::after{animation:skaleos-impactflash .55s ease-out both;}
   @keyframes skaleos-impactflash{0%{opacity:0;}12%{opacity:1;}100%{opacity:0;}}
+  .dalleportal{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:1;background:radial-gradient(circle at var(--dpx,50%) var(--dpy,50%),#1c5943 0%,#0E2620 46%,#050c09 100%);clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));-webkit-clip-path:circle(0% at var(--dpx,50%) var(--dpy,50%));}
+  .dalleportal.dp-in{transition:clip-path 1.05s cubic-bezier(.65,0,.35,1),-webkit-clip-path 1.05s cubic-bezier(.65,0,.35,1);clip-path:circle(150% at var(--dpx,50%) var(--dpy,50%));-webkit-clip-path:circle(150% at var(--dpx,50%) var(--dpy,50%));}
+  .dalleportal.dp-out{transition:opacity .75s ease;opacity:0;}
+  .dalleportal .dp-word{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;font-family:'Space Mono',monospace;font-size:clamp(12px,1.6vw,15px);letter-spacing:0.22em;text-transform:uppercase;color:#8FE9BF;white-space:nowrap;}
+  .dalleportal.dp-in .dp-word{animation:skaleos-portalword 1.05s ease both;animation-delay:.25s;}
+  @keyframes skaleos-portalword{0%{opacity:0;transform:translate(-50%,-50%) translateY(10px);}45%{opacity:1;transform:translate(-50%,-50%) translateY(0);}100%{opacity:0;}}
   @media(max-width:768px){.agora img{animation:none !important;will-change:auto;}}
   @keyframes skaleos-pageshake{0%{transform:translate3d(0,0,0);}10%{transform:translate3d(-5px,2px,0);}22%{transform:translate3d(4px,-3px,0);}34%{transform:translate3d(-3px,2px,0);}48%{transform:translate3d(3px,-1px,0);}64%{transform:translate3d(-2px,1px,0);}82%{transform:translate3d(1px,-1px,0);}100%{transform:translate3d(0,0,0);}}
   @media(min-width:761px){html.pageshake{animation:skaleos-pageshake .6s cubic-bezier(.36,.07,.19,.97) both;overflow-x:clip;}}
@@ -416,7 +422,7 @@
   <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#EEF6F0;background-image:linear-gradient(#07674b1f 1px,transparent 1px),linear-gradient(90deg,#07674b1f 1px,transparent 1px);background-size:52px 52px;"></div>
   <div style="position:fixed;left:50%;top:-260px;transform:translateX(-50%);width:960px;height:640px;z-index:-1;pointer-events:none;background:radial-gradient(closest-side,#8FE9BF42,transparent 70%);filter:blur(34px);"></div>
 
-  <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease;">
+  <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease,backdrop-filter 0.35s ease,-webkit-backdrop-filter 0.35s ease,border-bottom-color 0.35s ease;">
     <nav style="max-width:1280px;margin:0 auto;padding:19px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:padding 0.35s ease;">
       <a href="#" style="display:flex;align-items:center;text-decoration:none;">
         <img src="assets/skaleos-logo.png" alt="Skaleos" style="height:34px;width:auto;display:block;">
@@ -909,8 +915,9 @@
       <span><a href="Skaleos - Mentions legales.dc.html" style="color:inherit;text-decoration:underline;">Mentions légales</a> · <a href="Skaleos - Confidentialite.dc.html" style="color:inherit;text-decoration:underline;">Confidentialité</a></span>
     </div>
   </footer>
+  <div class="dalleportal" ref="{{ portalRef }}" aria-hidden="true"><span class="dp-word">Franchis la porte</span></div>
 </div>
-  
+
 
 </div>
 </x-dc>
@@ -1014,6 +1021,7 @@ class Component extends DCLogic {
     loop();
   }
   smashRef = React.createRef();
+  portalRef = React.createRef();
   audioCtx() {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
@@ -1113,8 +1121,8 @@ class Component extends DCLogic {
       const hd = this.headerRef.current;
       if (hd) {
         if (this._navOn === undefined) this._navOn = false;
-        if (!this._navOn && y > 48) this._navOn = true;
-        else if (this._navOn && y < 20) this._navOn = false;
+        if (!this._navOn && y > 64) this._navOn = true;
+        else if (this._navOn && y < 24) this._navOn = false;
         const on = this._navOn;
         hd.style.background = on ? 'rgba(244,244,242,0.32)' : '#F4F4F2';
         hd.style.backdropFilter = on ? 'blur(18px) saturate(1.5)' : 'none';
@@ -1345,13 +1353,16 @@ class Component extends DCLogic {
       el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
       el.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !s.dragging) resumeLater(); });
       el.addEventListener('pointerdown', (e) => {
-        if (e.target.closest && e.target.closest('image-slot,wistia-player,.twfsbtn')) { pause(); resumeLater(); return; }
+        if (e.target.closest && e.target.closest('image-slot,.twfsbtn')) { pause(); resumeLater(); return; }
         pause(); s.dragging = true; s.lastX = e.clientX; s.id = e.pointerId; s.moved = false;
       });
       el.addEventListener('pointermove', (e) => {
         if (!s.dragging || e.pointerId !== s.id) return;
         if (!s.moved) {
-          if (Math.abs(e.clientX - s.lastX) < 6) return;
+          // Seuil volontairement large : un simple tap sur une vidéo (pour la
+          // lancer) tremble de quelques px sans qu'on veuille faire glisser
+          // le rail. Un vrai swipe dépasse ça largement dès la 2e frame.
+          if (Math.abs(e.clientX - s.lastX) < 16) return;
           s.moved = true; el.style.cursor = 'grabbing';
           try { el.setPointerCapture(e.pointerId); } catch (err) {}
         }
@@ -1868,16 +1879,33 @@ class Component extends DCLogic {
       document.documentElement.classList.add('pageshake');
       setTimeout(() => document.documentElement.classList.remove('pageshake'), 620);
       setTimeout(() => this.setState({ quake: 0 }), 1280);
+      // Portail : un iris part du point d'impact et avale tout l'écran,
+      // le saut vers iClose se fait pendant que l'écran est plein,
+      // puis se révèle en douceur une fois la réservation en place.
+      const portal = this.portalRef.current;
+      const rect = (e.currentTarget && e.currentTarget.getBoundingClientRect) ? e.currentTarget.getBoundingClientRect() : null;
+      if (portal && rect) {
+        portal.style.setProperty('--dpx', (rect.left + rect.width / 2) + 'px');
+        portal.style.setProperty('--dpy', (rect.top + rect.height / 2) + 'px');
+        portal.style.pointerEvents = 'auto';
+        portal.classList.remove('dp-out');
+        void portal.offsetWidth;
+        portal.classList.add('dp-in');
+      }
       const target = this.props.icloseUrl || '#rdv';
       setTimeout(() => {
         if (target.startsWith('#')) {
           const el = document.querySelector(target);
-          if (el) this._smoothScrollTo(el.getBoundingClientRect().top + window.scrollY, 1600);
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, left: 0, behavior: 'instant' });
+          if (portal) {
+            setTimeout(() => portal.classList.add('dp-out'), 140);
+            setTimeout(() => { portal.classList.remove('dp-in', 'dp-out'); portal.style.pointerEvents = 'none'; }, 940);
+          }
         } else {
           window.location.href = target;
         }
-      }, 1350);
-      setTimeout(() => { this.stoneGoing = false; this.setState({ stonePressed: false }); }, 2100);
+      }, 1050);
+      setTimeout(() => { this.stoneGoing = false; this.setState({ stonePressed: false }); }, 2200);
     };
     const bookUrl = this.props.icloseUrl || '';
     const bookHref = bookUrl || 'mailto:hello@skaleos.fr?subject=R%C3%A9server%20mon%20audit%20Skaleos';
@@ -2000,7 +2028,7 @@ class Component extends DCLogic {
         this._fsSaved = null;
       }
     };
-    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csShowVideo, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
+    return { ...rvC, colorPrimary, colorDark, colorAccent, heroSubtitle, ctaPrimaryLabel, ctaSecondaryLabel, ctaBannerLabel, ctaBannerSub, navMethode, navCases, navTestimonials, navCtaLabel, navMobileCta, linkLinkedin, linkEmail, linkInstagram, capCls: this.state.capIn ? 'capin' : '', onVidFs, ytPoster, vidPanelBg, ytStarted, ytNotStarted, onStartYt, icloseWidgetUrl, mobRows, mobOpacity, mobFadeDelay, bookHref, bookTarget, cs, csShowVideo, csNoThumb, csDots, csCls, csDx, csOp, csScale, csBlur, onCsPrev, onCsNext, onCsDown, onCsMove, onCsUp, videoMount, quakeCls: this.state.quake ? 'quake' : '', navOpen, onNavToggle, onNavClose, burgerTop, burgerBot, burgerMidOp, pavers, stonePressed, pressOpacity: stonePressed ? 1 : 0, stoneTint: stonePressed ? 'rgba(20,40,32,0.10)' : 'rgba(143,233,191,0)', onStoneDown, onStoneUp, onStoneClick, whyItems, box3dRef: this.box3dRef, vidZoomRef: this.vidZoomRef, vidPinRef: this.vidPinRef, boxCls, onBox, onPress, icloseHref, steps, cases, faqs, colA, colB, colC, colD, rowA, rowB, flipWord, partners2, grec, friseRef: this.friseRef, friseFillRef: this.friseFillRef, friseRailRef: this.friseRailRef, hasVideo, noVideo: !hasVideo && !hasYt, hasYt, ytSrc, showPlayBtn, onToggleSound, onFullscreen, glassCls, onGlass, smashRef: this.smashRef, portalRef: this.portalRef, bookMonth, bookDays, bookHasDay, bookTimes, bookReady, bookLabel, videoRef: this.videoRef, videoSrc: vu, tools2, sectionRef: this.sectionRef, cardRef: this.cardRef, titleRef: this.titleRef, ctaRef: this.ctaRef, ctaHighlightRef: this.ctaHighlightRef, heroRef: this.heroRef, heroCardRef: this.heroCardRef, headerRef: this.headerRef, towerRef: this.towerRef, netRef: this.netRef };
   }
 }
 </script>
