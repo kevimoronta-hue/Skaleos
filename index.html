@@ -510,6 +510,12 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
   html.lowfx .skglass,html.lowfx #skHeroSound,html.lowfx #skHeroFs{background:rgba(16,26,21,.6) !important;border-color:rgba(255,255,255,.28) !important;box-shadow:0 2px 8px rgba(0,0,0,.35) !important;}
   /* Header translucide sans blur -> fond quasi opaque pour rester lisible */
   html.lowfx header{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+  /* Pendant un scroll ACTIF, on coupe le flou du header fixe : le re-flou de
+     tout le contenu qui défile derrière, à chaque frame, est le principal coût
+     GPU qui fait tomber le scroll (notamment le scroll ancré des liens de nav)
+     à ~30fps sur mobile. Le flou ne compte visuellement qu'à l'arrêt -> une fois
+     posé, le rendu est identique. */
+  html.sk-scrolling header{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 </style>
 </helmet>
 
@@ -1260,7 +1266,13 @@ class Component extends DCLogic {
     // Coalescence : iOS peut émettre des rafales d'événements scroll ; on ne
     // lance le handler qu'une fois par frame (dédoublonné via rAF).
     this._scrollQueued = false;
+    this._deRoot = document.documentElement;
     this._onScrollRaf = () => {
+      // Marque un scroll actif -> le CSS coupe le flou du header le temps du
+      // mouvement (retiré 200ms après le dernier event = à l'arrêt).
+      if (!this._isScrolling) { this._isScrolling = true; this._deRoot.classList.add('sk-scrolling'); }
+      clearTimeout(this._scrollStopT);
+      this._scrollStopT = setTimeout(() => { this._isScrolling = false; this._deRoot.classList.remove('sk-scrolling'); }, 200);
       if (this._scrollQueued) return;
       this._scrollQueued = true;
       requestAnimationFrame(() => { this._scrollQueued = false; this.onScroll(); });
@@ -1407,6 +1419,9 @@ class Component extends DCLogic {
       const t0 = performance.now();
       const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
       this._autoScrolling = true; // allège onScroll pendant l'animation -> 120 fps
+      // Coupe le flou du header dès la 1re frame (scroll ancré des liens de nav) :
+      // c'était la cause du scroll saccadé ~30fps sur mobile.
+      if (this._deRoot) this._deRoot.classList.add('sk-scrolling');
       const step = (now) => {
         const p = Math.min(1, (now - t0) / dur);
         window.scrollTo({ top: startY + diff * ease(p), left: 0, behavior: 'instant' });
