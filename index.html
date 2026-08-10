@@ -64,18 +64,15 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://skaleos.fr/#org","name":"Skaleos","url":"https://skaleos.fr/","logo":"https://skaleos.fr/assets/skaleos-logo.png","description":"Structuration commerciale pour coachs et infopreneurs : système de vente centralisé, suivi du funnel, automatisations.","areaServed":"FR","founder":{"@type":"Person","name":"Corentin Lavenan","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"]},"email":"corentin@skaleos.fr","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"],"offers":{"@type":"Offer","name":"Audit stratégique offert","price":"0","priceCurrency":"EUR","description":"30 minutes pour identifier où tu perds des leads dans ton funnel."}},{"@type":"WebSite","@id":"https://skaleos.fr/#website","url":"https://skaleos.fr/","name":"Skaleos","inLanguage":"fr-FR","publisher":{"@id":"https://skaleos.fr/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Combien de temps avant de voir des résultats ?","acceptedAnswer":{"@type":"Answer","text":"Le diagnostic se fait dès le premier appel. Si on travaille ensemble, on commence par un appel d'audit qui apporte déjà des résultats concrets."}},{"@type":"Question","name":"Faut-il changer mes outils actuels ?","acceptedAnswer":{"@type":"Answer","text":"Non. Je m'appuie sur tes outils existants pour construire le système et t'en recommande si besoin."}},{"@type":"Question","name":"C'est fait pour qui ?","acceptedAnswer":{"@type":"Answer","text":"Pour les coachs et infopreneurs qui ont déjà un flux de leads et idéalement un setter ou un closer en place."}},{"@type":"Question","name":"Comment se passe le premier appel ?","acceptedAnswer":{"@type":"Answer","text":"30 minutes pour identifier où tu perds le plus de leads. Sans engagement."}}]}]}</script>
 <script src="image-slot.js"></script>
 <script src="https://app.iclosed.io/assets/widget.js" async=""></script>
+<!-- Embeds Wistia en async (non bloquants) : requis dès le chargement pour que
+     le mur de témoignages s'anime en "GIF" (l'observer lance play() tôt et ne
+     réessaie qu'un temps limité — différer casse l'autoplay). -->
 <script src="https://fast.wistia.com/player.js" async=""></script>
-<!-- Hero (au-dessus de la fold) : chargé tout de suite. -->
+<script src="https://fast.wistia.com/embed/cc5oq0ls1r.js" async="" type="module"></script>
+<script src="https://fast.wistia.com/embed/78qplhkpbe.js" async="" type="module"></script>
+<script src="https://fast.wistia.com/embed/94tineazxz.js" async="" type="module"></script>
+<script src="https://fast.wistia.com/embed/qtccki73ws.js" async="" type="module"></script>
 <script src="https://fast.wistia.com/embed/wqdh0pom7s.js" async="" type="module"></script>
-<!-- Embeds des vidéos témoignages (sous la fold) : chargés en différé (1re
-     interaction, ou peu après 'load' si idle) -> allège le chemin critique
-     sans jamais bloquer l'affichage des clips quand l'utilisateur descend. -->
-<script>(function(){var ids=['cc5oq0ls1r','78qplhkpbe','94tineazxz','qtccki73ws'],done=false;
-function load(){if(done)return;done=true;ids.forEach(function(id){var s=document.createElement('script');s.async=true;s.type='module';s.src='https://fast.wistia.com/embed/'+id+'.js';document.head.appendChild(s);});cleanup();}
-function cleanup(){['scroll','pointerdown','touchstart','keydown'].forEach(function(e){window.removeEventListener(e,load);});}
-['scroll','pointerdown','touchstart','keydown'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
-function idle(){(window.requestIdleCallback||function(f){setTimeout(f,1200);})(load);}
-if(document.readyState==='complete')idle();else window.addEventListener('load',idle,{once:true});})();</script>
 <!-- Fontshare (general-sans) retiré : police jamais utilisée dans le CSS. -->
 <!-- Google Fonts non bloquantes : media=print puis bascule onload -> ne bloque
      plus le premier rendu. display=swap gère l'affichage (fallbacks proches). -->
@@ -293,6 +290,11 @@ if(document.readyState==='complete')idle();else window.addEventListener('load',i
       border-radius:28px !important;
       background:rgba(244,244,242,.94) !important;
       box-shadow:0 20px 50px rgba(14,38,32,.22),inset 0 1px 0 rgba(255,255,255,.8) !important;
+      /* Menu ouvert : le fond est à 94% opaque, le flou dessous est invisible.
+         On le COUPE -> plus de re-flou d'une grande surface à chaque frame
+         pendant l'ouverture (cause principale du "menu lent" sur mobile). */
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
     }
     header nav{padding:9px 10px 9px 20px !important;}
     .burger{
@@ -516,7 +518,7 @@ if(document.readyState==='complete')idle();else window.addEventListener('load',i
   <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#EEF6F0;background-image:linear-gradient(#07674b1f 1px,transparent 1px),linear-gradient(90deg,#07674b1f 1px,transparent 1px);background-size:52px 52px;"></div>
   <div style="position:fixed;left:50%;top:-260px;transform:translateX(-50%);width:960px;height:640px;z-index:-1;pointer-events:none;background:radial-gradient(closest-side,#8FE9BF42,transparent 70%);filter:blur(34px);"></div>
 
-  <header ref="{{ headerRef }}" class="{{ navOpenCls }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease,backdrop-filter 0.35s ease,-webkit-backdrop-filter 0.35s ease,border-bottom-color 0.35s ease,border-radius 0.35s ease;">
+  <header ref="{{ headerRef }}" class="{{ navOpenCls }}" style="position:sticky;top:0;z-index:50;background:#F4F4F2;border-bottom:1px solid #E6E6E1;overflow-anchor:none;transition:background 0.35s ease,box-shadow 0.35s ease,border-bottom-color 0.35s ease,border-radius 0.35s ease;">
     <nav style="max-width:1280px;margin:0 auto;padding:19px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:padding 0.35s ease;">
       <a href="#" style="display:flex;align-items:center;text-decoration:none;">
         <img src="assets/skaleos-logo.png" alt="Skaleos" style="height:34px;width:auto;display:block;">
