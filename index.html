@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Preconnect vers les tiers du chemin critique (React, fonts, Wistia) : ouvre
+     les connexions TCP/TLS en avance -> LCP/FCP plus rapides. -->
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fast.wistia.com">
+<link rel="dns-prefetch" href="https://fast.wistia.net">
 <script>if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);</script>
 <script>/* Détection appareil peu puissant (Android d'entrée de gamme, data-saver,
 mouvement réduit) -> classe .lowfx appliquée AVANT le 1er paint pour couper les
@@ -19,10 +26,12 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
 <body>
 <x-dc>
 <helmet>
-<link rel="preload" as="image" href="assets/logo-yadulink.webp">
-<link rel="preload" as="image" href="assets/partners/yazee.png">
-<link rel="preload" as="image" href="assets/face-kevin.jpg">
-<link rel="preload" as="image" href="assets/face-florian.png">
+<!-- Ces visuels sont sous la fold : preload en priorité BASSE pour ne pas
+     concurrencer la ressource LCP (le hero) sur la bande passante initiale. -->
+<link rel="preload" as="image" href="assets/logo-yadulink.webp" fetchpriority="low">
+<link rel="preload" as="image" href="assets/partners/yazee.png" fetchpriority="low">
+<link rel="preload" as="image" href="assets/face-kevin.jpg" fetchpriority="low">
+<link rel="preload" as="image" href="assets/face-florian.png" fetchpriority="low">
 <link rel="preload" as="image" href="assets/agora-normal.jpg" fetchpriority="low" media="(min-width: 761px)">
 <link rel="preload" as="image" href="assets/agora-pressed.jpg" fetchpriority="low" media="(min-width: 761px)">
 <link rel="preload" as="image" href="assets/mobile-dalle-normal.jpg" fetchpriority="low" media="(max-width: 760px)">
@@ -48,20 +57,30 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Skaleos — Le système qui te dit où tu perds des ventes">
 <meta name="twitter:description" content="Audit stratégique offert de 30 min : identifie où tu perds des leads dans ton funnel.">
-<!-- Google Analytics 4 : remplacer G-XXXXXXXXXX par votre ID de mesure -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+<!-- Google Analytics 4 : renseigner GA_ID avec votre vrai ID (G-XXXX...). Tant
+     qu'il reste le placeholder, on NE charge PAS gtag (évite une requête tierce
+     + de l'exécution JS inutiles à chaque visite). -->
+<script>(function(){var GA_ID='G-XXXXXXXXXX';window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;if(GA_ID&&GA_ID.indexOf('XXXX')===-1){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.appendChild(s);gtag('js',new Date());gtag('config',GA_ID);}})();</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://skaleos.fr/#org","name":"Skaleos","url":"https://skaleos.fr/","logo":"https://skaleos.fr/assets/skaleos-logo.png","description":"Structuration commerciale pour coachs et infopreneurs : système de vente centralisé, suivi du funnel, automatisations.","areaServed":"FR","founder":{"@type":"Person","name":"Corentin Lavenan","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"]},"email":"corentin@skaleos.fr","sameAs":["https://www.linkedin.com/in/corentin-lavenan-systeme-automatisation-sales","https://www.instagram.com/corentin_lvn_"],"offers":{"@type":"Offer","name":"Audit stratégique offert","price":"0","priceCurrency":"EUR","description":"30 minutes pour identifier où tu perds des leads dans ton funnel."}},{"@type":"WebSite","@id":"https://skaleos.fr/#website","url":"https://skaleos.fr/","name":"Skaleos","inLanguage":"fr-FR","publisher":{"@id":"https://skaleos.fr/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Combien de temps avant de voir des résultats ?","acceptedAnswer":{"@type":"Answer","text":"Le diagnostic se fait dès le premier appel. Si on travaille ensemble, on commence par un appel d'audit qui apporte déjà des résultats concrets."}},{"@type":"Question","name":"Faut-il changer mes outils actuels ?","acceptedAnswer":{"@type":"Answer","text":"Non. Je m'appuie sur tes outils existants pour construire le système et t'en recommande si besoin."}},{"@type":"Question","name":"C'est fait pour qui ?","acceptedAnswer":{"@type":"Answer","text":"Pour les coachs et infopreneurs qui ont déjà un flux de leads et idéalement un setter ou un closer en place."}},{"@type":"Question","name":"Comment se passe le premier appel ?","acceptedAnswer":{"@type":"Answer","text":"30 minutes pour identifier où tu perds le plus de leads. Sans engagement."}}]}]}</script>
 <script src="image-slot.js"></script>
 <script src="https://app.iclosed.io/assets/widget.js" async=""></script>
 <script src="https://fast.wistia.com/player.js" async=""></script>
-<script src="https://fast.wistia.com/embed/cc5oq0ls1r.js" async="" type="module"></script>
-<script src="https://fast.wistia.com/embed/78qplhkpbe.js" async="" type="module"></script>
-<script src="https://fast.wistia.com/embed/94tineazxz.js" async="" type="module"></script>
-<script src="https://fast.wistia.com/embed/qtccki73ws.js" async="" type="module"></script>
+<!-- Hero (au-dessus de la fold) : chargé tout de suite. -->
 <script src="https://fast.wistia.com/embed/wqdh0pom7s.js" async="" type="module"></script>
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&amp;display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Artifika&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<!-- Embeds des vidéos témoignages (sous la fold) : chargés en différé (1re
+     interaction, ou peu après 'load' si idle) -> allège le chemin critique
+     sans jamais bloquer l'affichage des clips quand l'utilisateur descend. -->
+<script>(function(){var ids=['cc5oq0ls1r','78qplhkpbe','94tineazxz','qtccki73ws'],done=false;
+function load(){if(done)return;done=true;ids.forEach(function(id){var s=document.createElement('script');s.async=true;s.type='module';s.src='https://fast.wistia.com/embed/'+id+'.js';document.head.appendChild(s);});cleanup();}
+function cleanup(){['scroll','pointerdown','touchstart','keydown'].forEach(function(e){window.removeEventListener(e,load);});}
+['scroll','pointerdown','touchstart','keydown'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
+function idle(){(window.requestIdleCallback||function(f){setTimeout(f,1200);})(load);}
+if(document.readyState==='complete')idle();else window.addEventListener('load',idle,{once:true});})();</script>
+<!-- Fontshare (general-sans) retiré : police jamais utilisée dans le CSS. -->
+<!-- Google Fonts non bloquantes : media=print puis bascule onload -> ne bloque
+     plus le premier rendu. display=swap gère l'affichage (fallbacks proches). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Artifika&amp;family=Inter:wght@400;500;600;700&amp;display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Artifika&amp;family=Inter:wght@400;500;600;700&amp;display=swap"></noscript>
 <style>
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -1339,7 +1358,16 @@ class Component extends DCLogic {
     };
     vidTick();
     this.onScroll();
+    // Le mot qui "flippe" est dans le hero. On observe sa visibilité pour ne
+    // PAS déclencher un re-render complet du composant toutes les 6s quand le
+    // hero est hors écran (économie de long tasks périodiques).
+    this._heroInView = true;
+    if (this.heroRef.current && 'IntersectionObserver' in window) {
+      this._heroIO = new IntersectionObserver((ents) => { const e = ents[0]; if (e) this._heroInView = e.isIntersecting; }, { rootMargin: '0px' });
+      this._heroIO.observe(this.heroRef.current);
+    }
     this.flipTimer = setInterval(() => {
+      if (this._heroInView === false) return;
       this.setState(s => ({ flipIdx: (s.flipIdx + 1) % this.flipWords.length }));
     }, 6000);
     this.hlObserver = new IntersectionObserver((entries) => {
@@ -1348,9 +1376,14 @@ class Component extends DCLogic {
     }, { threshold: 0.4 });
     if (this.ctaRef.current) this.hlObserver.observe(this.ctaRef.current);
     setTimeout(() => this.onScroll(), 250);
+    // Attente de THREE (chargé de façon asynchrone). Cap à ~12s : au-delà on
+    // arrête de sonder (sinon, si THREE ne charge jamais, ce timer tourne à
+    // 8 réveils/seconde À L'INFINI -> charge CPU/batterie permanente).
+    this._waitThreeN = 0;
     this.waitThree = setInterval(() => {
       if (window.THREE && this.box3dRef.current) { clearInterval(this.waitThree); this.initBox3D(); }
-    }, 120);
+      else if (++this._waitThreeN > 80) { clearInterval(this.waitThree); }
+    }, 150);
     setTimeout(() => this.initMarqueeDrag(), 400);
     this._capCheck = () => {
       if (this.state.capIn) return;
@@ -1455,7 +1488,10 @@ class Component extends DCLogic {
         });
       });
     };
-    this._wireWistiaT = setInterval(this._wireWistia, 1200);
+    // Cap de sécurité : on arrête de scanner après ~48s (tout le contenu, même
+    // CMS/différé, est câblé bien avant) au lieu de sonder indéfiniment.
+    this._wireWistiaN = 0;
+    this._wireWistiaT = setInterval(() => { this._wireWistia(); if (++this._wireWistiaN > 40) clearInterval(this._wireWistiaT); }, 1200);
     this._wireWistia();
     // Boutons "raccourcis" (son + plein écran) façon Apple/glass, superposés sur
     // chaque clip témoignage. Ils ne font QUE piloter les contrôles natifs
@@ -1551,11 +1587,15 @@ class Component extends DCLogic {
         card.appendChild(fBtn);
       });
     };
-    this._wireWistiaCtrlsT = setInterval(this._wireWistiaCtrls, 1200);
+    this._wireCtrlsN = 0;
+    this._wireWistiaCtrlsT = setInterval(() => { this._wireWistiaCtrls(); if (++this._wireCtrlsN > 40) clearInterval(this._wireWistiaCtrlsT); }, 1200);
     this._wireWistiaCtrls();
     // Filet de sécurité : resynchronise les icônes son avec l'état réel des
     // lecteurs (le mode GIF peut re-muter un clip sorti de l'écran).
-    this._sndSyncT = setInterval(() => { (this._sndSyncs || []).forEach((fn) => { try { fn(); } catch (e) {} }); }, 1000);
+    // Resync des icônes son : filet de sécurité pour les changements faits via
+    // les contrôles natifs Wistia. Ne tourne que si la section témoignages est
+    // visible (sinon 12 requêtes shadowRoot/s pour rien).
+    this._sndSyncT = setInterval(() => { if (this._marqVisible === false) return; (this._sndSyncs || []).forEach((fn) => { try { fn(); } catch (e) {} }); }, 1500);
     // Plein écran natif : quand un clip y entre, on fige le carrousel ; à la
     // sortie, on recoupe le son et on relance le GIF muet proprement.
     this._onFsChange = () => {
@@ -1663,7 +1703,7 @@ class Component extends DCLogic {
       window.addEventListener('load', this._syncHeroPortal);
       // Filet : corrige un éventuel décalage de layout tardif (polices/images
       // chargées au-dessus). Écriture seulement si la position a réellement changé.
-      this._heroPosT = setInterval(this._syncHeroPortal, 500);
+      this._heroPosT = setInterval(this._syncHeroPortal, 1200);
       // Autoplay muet robuste : relance quelques fois si Wistia n'a pas démarré
       // (sinon la miniature/overlay Wistia s'affiche "une fois sur deux").
       let _hk = 0;
@@ -1969,6 +2009,17 @@ class Component extends DCLogic {
     if (this._vidRaf) cancelAnimationFrame(this._vidRaf);
     if (this._onResize3D) window.removeEventListener('resize', this._onResize3D);
     if (this.waitThree) clearInterval(this.waitThree);
+    if (this._heroIO) this._heroIO.disconnect();
+    if (this._wistiaVizObserver) this._wistiaVizObserver.disconnect();
+    if (this._wireWistiaT) clearInterval(this._wireWistiaT);
+    if (this._wireWistiaCtrlsT) clearInterval(this._wireWistiaCtrlsT);
+    if (this._sndSyncT) clearInterval(this._sndSyncT);
+    if (this._heroPosT) clearInterval(this._heroPosT);
+    if (this._heroKickT) clearInterval(this._heroKickT);
+    if (this._heroIconT) clearInterval(this._heroIconT);
+    if (this._wireHeroT) clearInterval(this._wireHeroT);
+    if (this._capCheck) window.removeEventListener('scroll', this._capCheck);
+    if (this._onScrollRaf) window.removeEventListener('scroll', this._onScrollRaf);
   }
   renderVals() {
     const cms = this.state.cms || {};
