@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<title>Skaleos — Admin</title>
+<style>
+  body{margin:0;background:#0E2620;}
+  input,textarea{font-family:'Inter',sans-serif;}
+  ::selection{background:#8FE9BF;color:#0E2620;}
+  @keyframes sk-fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+</helmet>
+
+<sc-if value="{{ !authed }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;overflow:hidden;">
+  <img src="assets/hero-temple-pool.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.8) brightness(.5);">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,38,32,.75),rgba(14,38,32,.92));"></div>
+  <form onSubmit="{{ onLogin }}" style="position:relative;z-index:1;width:min(90%,380px);background:rgba(20,44,36,.72);backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(143,233,191,.18);border-radius:22px;padding:38px 32px;box-shadow:0 30px 70px rgba(0,0,0,.45);animation:sk-fade .5s ease both;">
+    <img src="assets/skaleos-logo.png" alt="Skaleos" style="height:30px;width:auto;display:block;margin:0 auto 22px;filter:brightness(0) invert(1);">
+    <p style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8FE9BF;text-align:center;margin:0 0 26px;">Portail admin</p>
+    <label style="display:block;font-size:13px;color:#c9d6cf;margin-bottom:6px;">Identifiant</label>
+    <input value="{{ username }}" onChange="{{ onUsername }}" type="text" autoComplete="username" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(143,233,191,.25);background:rgba(255,255,255,.06);color:#fff;font-size:15px;margin-bottom:16px;outline:none;">
+    <label style="display:block;font-size:13px;color:#c9d6cf;margin-bottom:6px;">Mot de passe</label>
+    <input value="{{ password }}" onChange="{{ onPassword }}" type="password" autoComplete="current-password" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(143,233,191,.25);background:rgba(255,255,255,.06);color:#fff;font-size:15px;margin-bottom:22px;outline:none;">
+    <sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}">
+      <p style="color:#ff9b8a;font-size:13px;margin:-10px 0 16px;">{{ loginError }}</p>
+    </sc-if>
+    <button type="submit" style="width:100%;padding:13px;border-radius:10px;border:none;background:#8FE9BF;color:#0E2620;font-weight:700;font-size:15px;cursor:pointer;">{{ loginBtnLabel }}</button>
+  </form>
+</div>
+</sc-if>
+
+<sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#F4F4F2;font-family:'Inter',sans-serif;color:#0E2620;">
+  <header style="position:sticky;top:0;z-index:10;background:#0E2620;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;">
+    <img src="assets/skaleos-logo.png" alt="Skaleos" style="height:24px;filter:brightness(0) invert(1);">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <sc-if value="{{ saveMsg }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Space Mono',monospace;font-size:12px;color:#8FE9BF;">{{ saveMsg }}</span></sc-if>
+      <button onClick="{{ onSave }}" disabled="{{ saving }}" style="padding:10px 20px;border-radius:999px;border:none;background:#8FE9BF;color:#0E2620;font-weight:700;font-size:13px;cursor:pointer;">{{ saveBtnLabel }}</button>
+      <button onClick="{{ onLogout }}" style="padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:none;color:#fff;font-size:13px;cursor:pointer;">Déconnexion</button>
+    </div>
+  </header>
+
+  <div style="max-width:920px;margin:0 auto;padding:36px 24px 80px;display:flex;flex-direction:column;gap:36px;">
+
+    <section style="background:#fff;border:1px solid #E6E6E1;border-radius:18px;padding:26px 28px;">
+      <h3 style="margin:0 0 18px;font-size:17px;">Couleurs de marque</h3>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Primaire (boutons, section RDV)<input type="color" value="{{ data.colors.primary }}" onChange="{{ onColor_primary }}" style="width:64px;height:36px;border:none;padding:0;cursor:pointer;"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Foncé (fond, texte)<input type="color" value="{{ data.colors.dark }}" onChange="{{ onColor_dark }}" style="width:64px;height:36px;border:none;padding:0;cursor:pointer;"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Accent (badges, highlights)<input type="color" value="{{ data.colors.accent }}" onChange="{{ onColor_accent }}" style="width:64px;height:36px;border:none;padding:0;cursor:pointer;"></label>
+      </div>
+      <p style="font-size:12px;color:#9a9388;margin:14px 0 0;">S'applique aux éléments de marque principaux (boutons, section audit, badges) — pas à chaque pixel du site.</p>
+    </section>
+
+    <section style="background:#fff;border:1px solid #E6E6E1;border-radius:18px;padding:26px 28px;">
+      <h3 style="margin:0 0 18px;font-size:17px;">Textes principaux</h3>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Sous-titre du hero<textarea value="{{ data.text.heroSubtitle }}" onChange="{{ onText_heroSubtitle }}" rows="2" style="font-size:14px;padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></textarea></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Bouton principal<input value="{{ data.text.ctaPrimaryLabel }}" onChange="{{ onText_ctaPrimaryLabel }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Bouton secondaire<input value="{{ data.text.ctaSecondaryLabel }}" onChange="{{ onText_ctaSecondaryLabel }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Bandeau CTA (label)<input value="{{ data.text.ctaBannerLabel }}" onChange="{{ onText_ctaBannerLabel }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Bandeau CTA (sous-texte)<input value="{{ data.text.ctaBannerSub }}" onChange="{{ onText_ctaBannerSub }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Nav — Méthode<input value="{{ data.text.navMethode }}" onChange="{{ onText_navMethode }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Nav — Études de cas<input value="{{ data.text.navCases }}" onChange="{{ onText_navCases }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Nav — Témoignages<input value="{{ data.text.navTestimonials }}" onChange="{{ onText_navTestimonials }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Nav — bouton CTA<input value="{{ data.text.navCtaLabel }}" onChange="{{ onText_navCtaLabel }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fff;border:1px solid #E6E6E1;border-radius:18px;padding:26px 28px;">
+      <h3 style="margin:0 0 18px;font-size:17px;">Liens de contact</h3>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">LinkedIn<input value="{{ data.links.linkedin }}" onChange="{{ onLink_linkedin }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Email (mailto:...)<input value="{{ data.links.email }}" onChange="{{ onLink_email }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#5e6b64;">Instagram<input value="{{ data.links.instagram }}" onChange="{{ onLink_instagram }}" style="padding:10px;border-radius:8px;border:1px solid #E6E6E1;"></label>
+      </div>
+    </section>
+
+    <section style="background:#fff;border:1px solid #E6E6E1;border-radius:18px;padding:26px 28px;">
+      <h3 style="margin:0 0 18px;font-size:17px;">Méthode — 5 étapes</h3>
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <sc-for list="{{ data.methodSteps }}" as="step" hint-placeholder-count="5">
+          <div style="border:1px solid #E6E6E1;border-radius:12px;padding:16px;">
+            <input value="{{ step.t }}" onChange="{{ step.onT }}" style="width:100%;box-sizing:border-box;font-weight:600;padding:8px 10px;border-radius:8px;border:1px solid #E6E6E1;margin-bottom:8px;">
+            <textarea value="{{ step.d }}" onChange="{{ step.onD }}" rows="2" style="width:100%;box-sizing:border-box;font-size:13px;padding:8px 10px;border-radius:8px;border:1px solid #E6E6E1;"></textarea>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="background:#fff;border:1px solid #E6E6E1;border-radius:18px;padding:26px 28px;">
+      <h3 style="margin:0 0 18px;font-size:17px;">Études de cas</h3>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <sc-for list="{{ data.caseStudies }}" as="cs" hint-placeholder-count="2">
+          <div style="border:1px solid #E6E6E1;border-radius:14px;padding:18px;">
+            <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <span style="font-size:12px;color:#9a9388;">Logo</span>
+                <img src="{{ cs.logoSrc }}" style="width:90px;height:36px;object-fit:contain;background:#F4F4F2;border-radius:6px;">
+                <input type="file" accept="image/*" onChange="{{ cs.onLogoFile }}" style="font-size:11px;">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <span style="font-size:12px;color:#9a9388;">Photo</span>
+                <img src="{{ cs.avatarSrc }}" style="width:44px;height:44px;object-fit:cover;border-radius:50%;">
+                <input type="file" accept="image/*" onChange="{{ cs.onAvatarFile }}" style="font-size:11px;">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+              <input value="{{ cs.person }}" onChange="{{ cs.onPerson }}" placeholder="Prénom" style="padding:9px;border-radius:8px;border:1px solid #E6E6E1;">
+              <input value="{{ cs.company }}" onChange="{{ cs.onCompany }}" placeholder="Entreprise" style="padding:9px;border-radius:8px;border:1px solid #E6E6E1;">
+            </div>
+            <input value="{{ cs.biz }}" onChange="{{ cs.onBiz }}" placeholder="Activité" style="width:100%;box-sizing:border-box;padding:9px;border-radius:8px;border:1px solid #E6E6E1;margin-bottom:10px;">
+            <textarea value="{{ cs.quote }}" onChange="{{ cs.onQuote }}" rows="3" placeholder="Citation" style="width:100%;box-sizing:border-box;padding:9px;border-radius:8px;border:1px solid #E6E6E1;margin-bottom:10px;"></textarea>
+            <sc-for list="{{ cs.points }}" as="pt" hint-placeholder-count="3">
+              <input value="{{ pt.v }}" onChange="{{ pt.onChange }}" style="width:100%;box-sizing:border-box;padding:8px;border-radius:8px;border:1px solid #E6E6E1;margin-bottom:6px;font-size:13px;">
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+  </div>
+</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { username: '', password: '', loginError: '', authed: false, checking: true, saving: false, saveMsg: '', data: null };
+  componentDidMount() {
+    fetch('/api/content').then((r) => {
+      if (r.status === 200) return r.json().then((d) => this.setState({ authed: true, data: d, checking: false }));
+      this.setState({ authed: false, checking: false });
+    }).catch(() => this.setState({ checking: false }));
+  }
+  defaultData() {
+    return {
+      colors: { primary: '#13b37d', dark: '#0E2620', accent: '#8FE9BF' },
+      text: { heroSubtitle: '', ctaPrimaryLabel: 'Réserver mon analyse', ctaSecondaryLabel: 'Nos cas clients', ctaBannerLabel: 'La première étape est offerte', ctaBannerSub: '30 minutes · sans engagement', navMethode: 'Méthode', navCases: 'Études de cas', navTestimonials: 'Témoignages', navCtaLabel: 'Audit OFFERT', navMobileCta: 'Réserver mon audit offert' },
+      links: { linkedin: '', email: '', instagram: '' },
+      methodSteps: [0, 1, 2, 3, 4].map(() => ({ t: '', d: '' })),
+      caseStudies: [{ key: 'yadulink', person: '', company: '', biz: '', logoSrc: '', avatarSrc: '', quote: '', points: ['', '', ''] }, { key: 'nomad', person: '', company: '', biz: '', logoSrc: '', avatarSrc: '', quote: '', points: ['', '', ''] }],
+    };
+  }
+  setField(path, value) {
+    this.setState((s) => {
+      const d = JSON.parse(JSON.stringify(s.data));
+      let o = d;
+      for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
+      o[path[path.length - 1]] = value;
+      return { data: d };
+    });
+  }
+  fileToDataUrl(file) {
+    return new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
+  }
+  renderVals() {
+    const data = this.state.data || this.defaultData();
+    const onUsername = (e) => this.setState({ username: e.target.value });
+    const onPassword = (e) => this.setState({ password: e.target.value });
+    const onLogin = (e) => {
+      e.preventDefault();
+      this.setState({ loginError: '' });
+      fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: this.state.username, password: this.state.password }) })
+        .then((r) => r.json().then((body) => ({ ok: r.ok, body })))
+        .then(({ ok, body }) => {
+          if (ok) { this.setState({ authed: true, data: body.content || this.defaultData() }); }
+          else this.setState({ loginError: body.error || 'Identifiants incorrects' });
+        }).catch(() => this.setState({ loginError: "Impossible de contacter le serveur — l'API n'est peut-être pas encore déployée." }));
+    };
+    const onLogout = () => { fetch('/api/logout', { method: 'POST' }).finally(() => this.setState({ authed: false, data: null })); };
+    const onColorField = (k) => (e) => this.setField(['colors', k], e.target.value);
+    const onTextField = (k) => (e) => this.setField(['text', k], e.target.value);
+    const onLinkField = (k) => (e) => this.setField(['links', k], e.target.value);
+    const methodSteps = data.methodSteps.map((step, i) => ({
+      ...step,
+      onT: (e) => this.setField(['methodSteps', i, 't'], e.target.value),
+      onD: (e) => this.setField(['methodSteps', i, 'd'], e.target.value),
+    }));
+    const caseStudies = data.caseStudies.map((cs, i) => ({
+      ...cs,
+      onPerson: (e) => this.setField(['caseStudies', i, 'person'], e.target.value),
+      onCompany: (e) => this.setField(['caseStudies', i, 'company'], e.target.value),
+      onBiz: (e) => this.setField(['caseStudies', i, 'biz'], e.target.value),
+      onQuote: (e) => this.setField(['caseStudies', i, 'quote'], e.target.value),
+      onLogoFile: (e) => { const f = e.target.files[0]; if (f) this.fileToDataUrl(f).then((durl) => this.setField(['caseStudies', i, 'logoSrc'], durl)); },
+      onAvatarFile: (e) => { const f = e.target.files[0]; if (f) this.fileToDataUrl(f).then((durl) => this.setField(['caseStudies', i, 'avatarSrc'], durl)); },
+      points: (cs.points || ['', '', '']).map((v, pi) => ({ v, onChange: (e) => { const pts = [...(data.caseStudies[i].points || [])]; pts[pi] = e.target.value; this.setField(['caseStudies', i, 'points'], pts); } })),
+    }));
+    const onSave = () => {
+      this.setState({ saving: true, saveMsg: '' });
+      fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        .then((r) => { if (r.ok) this.setState({ saving: false, saveMsg: 'Enregistré ✓' }); else this.setState({ saving: false, saveMsg: 'Erreur à la sauvegarde' }); setTimeout(() => this.setState({ saveMsg: '' }), 3000); })
+        .catch(() => { this.setState({ saving: false, saveMsg: "Erreur réseau" }); });
+    };
+    const colorFields = {};
+    ['primary', 'dark', 'accent'].forEach((k) => { colorFields['onColor_' + k] = onColorField(k); });
+    const textFields = {};
+    ['heroSubtitle', 'ctaPrimaryLabel', 'ctaSecondaryLabel', 'ctaBannerLabel', 'ctaBannerSub', 'navMethode', 'navCases', 'navTestimonials', 'navCtaLabel'].forEach((k) => { textFields['onText_' + k] = onTextField(k); });
+    const linkFields = {};
+    ['linkedin', 'email', 'instagram'].forEach((k) => { linkFields['onLink_' + k] = onLinkField(k); });
+    return {
+      authed: this.state.authed, username: this.state.username, password: this.state.password, loginError: this.state.loginError,
+      loginBtnLabel: 'Se connecter', saveBtnLabel: this.state.saving ? 'Enregistrement…' : 'Enregistrer', saving: this.state.saving, saveMsg: this.state.saveMsg,
+      onUsername, onPassword, onLogin, onLogout, onSave,
+      data: { ...data, methodSteps, caseStudies },
+      ...colorFields, ...textFields, ...linkFields,
+    };
+  }
+}
+</script>
+</body>
+</html>
