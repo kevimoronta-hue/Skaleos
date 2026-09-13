@@ -68,15 +68,6 @@
       color: #eaf6ef;
       background: radial-gradient(ellipse at 50% 30%, #0d4b37 0%, #072a1e 75%, #041a12 100%);
     }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 8% 22%, transparent 0 72px, rgba(143, 233, 191, .06) 73px 74px, transparent 75px),
-        radial-gradient(circle at 92% 74%, transparent 0 118px, rgba(143, 233, 191, .05) 119px 120px, transparent 121px);
-    }
     .hero-inner { position: relative; z-index: 1; width: 100%; text-align: center; }
     .eyebrow {
       margin: 0 0 18px;
@@ -212,7 +203,7 @@
     .section-head { max-width: 720px; margin: 0 auto 54px; text-align: center; }
     h2 { margin: 0 0 16px; font-size: clamp(32px, 4.7vw, 58px); line-height: 1.12; letter-spacing: -.025em; }
     .section-head p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
-    .video-grid { display: grid; grid-template-columns: 1fr; gap: 58px; max-width: 390px; margin: 0 auto; }
+    .video-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 42px 24px; margin: 0 auto; }
     .video-card { margin: 0; }
     .player-portrait { aspect-ratio: 9 / 16; box-shadow: 0 18px 48px rgba(14, 38, 32, .17); }
     .player-portrait .controls { gap: 8px; padding: 7px 10px; }
@@ -278,6 +269,7 @@
     .foot a { color: var(--muted); font-size: 13px; text-underline-offset: 3px; }
 
     @media (max-width: 920px) {
+      .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 740px; }
       .case-study { grid-template-columns: 1fr; gap: 24px; }
       .case-study:nth-child(even) .case-copy,
       .case-study:nth-child(even) .case-video { order: initial; }
@@ -297,7 +289,7 @@
       .proof, .cases { padding: 78px 0 86px; }
       .section-head { margin-bottom: 36px; }
       .section-head p { font-size: 15px; }
-      .video-grid { gap: 48px; max-width: 340px; }
+      .video-grid { grid-template-columns: 1fr; gap: 48px; max-width: 340px; }
       .player-portrait { border-radius: 16px; }
       .player-portrait .play-big { width: 54px; }
       .player-portrait .seek { height: 26px; }
@@ -334,7 +326,7 @@
         <p class="lead">Regarde cette courte vidéo pour préparer au mieux notre appel.</p>
 
         <div class="player player-main" data-video-key="hero">
-          <video playsinline preload="metadata" poster="assets/wistia/wqdh0pom7s.jpg"></video>
+          <video playsinline preload="metadata" poster="assets/wistia/l6sak45p3l.png"></video>
           <button class="play-big" type="button" aria-label="Lire la vidéo"><span class="play-symbol" aria-hidden="true"></span></button>
           <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
           <div class="controls">
@@ -352,7 +344,7 @@
     <section class="proof" aria-labelledby="temoignages-title">
       <div class="shell">
         <div class="section-head">
-          <h2 id="temoignages-title">Ce sont mes clients qui en parlent le mieux.</h2>
+          <h2 id="temoignages-title">Mes clients en parlent le mieux.</h2>
         </div>
         <div class="video-grid">
           <figure class="video-card">
@@ -411,6 +403,34 @@
             </div>
             <figcaption><p class="video-name">Kevin</p><p class="video-role">CEO, Yadulink</p></figcaption>
           </figure>
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="dqkmzp84bk">
+              <video playsinline preload="none" poster="assets/wistia/dqkmzp84bk.png"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage de Jessim"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Jessim</p><p class="video-role">Growth Operator, Fitzye Coaching</p></figcaption>
+          </figure>
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="0nltxdkbcs">
+              <video playsinline preload="none" poster="assets/wistia/0nltxdkbcs.png"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage d’Axel"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Axel</p><p class="video-role">CEO, BootyLift</p></figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -418,7 +438,7 @@
     <section class="cases" aria-labelledby="cas-title">
       <div class="shell">
         <div class="section-head">
-          <h2 id="cas-title">Deux systèmes. Deux transformations concrètes.</h2>
+          <h2 id="cas-title">Des transformations concrètes.</h2>
           <p>Découvre comment Skaleos a structuré leur suivi commercial au quotidien.</p>
         </div>
         <div class="case-list">
@@ -488,8 +508,8 @@
       };
       const sources = {
         hero: {
-          sd: 'https://embed-ssl.wistia.com/deliveries/c7e4e5c6a5043aa42ec027273207c0664d028dbb.bin',
-          hd: 'https://embed-ssl.wistia.com/deliveries/c957418be037ff02251c2b670fd6709c58826f0b.bin'
+          sd: 'https://embed-ssl.wistia.com/deliveries/bf5437dfc47c03e13a21e3f8a3bd62cefdd94e09.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/94342ec96552ddd275000fad5110d846d97a09c5.bin'
         },
         cc5oq0ls1r: {
           sd: 'https://embed-ssl.wistia.com/deliveries/a52c9cda1376a09cf6cbf1692f4909b59fb6d777.bin',
@@ -506,6 +526,14 @@
         qtccki73ws: {
           sd: 'https://embed-ssl.wistia.com/deliveries/a0d0b77d6af5f460282c98a955ccc8fb34406479.bin',
           hd: 'https://embed-ssl.wistia.com/deliveries/1f8d5f321ceac5fb03eeb73c20140c56147c3c00.bin'
+        },
+        dqkmzp84bk: {
+          sd: 'https://embed-ssl.wistia.com/deliveries/ddf83c84360ce5142729143cb122126b9534cdda.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/a1b593e5f3dd4cb364d4013d96468aab93bef75d.bin'
+        },
+        '0nltxdkbcs': {
+          sd: 'https://embed-ssl.wistia.com/deliveries/199eb5c252037b8de3cf9cb4ce8aaec90db5179f.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/724df50a31eae1d4a42f2191e1b37aad87320a9f.bin'
         }
       };
 
