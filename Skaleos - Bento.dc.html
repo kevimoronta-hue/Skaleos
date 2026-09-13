@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="assets/skaleos-favicon.png">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -737,7 +738,6 @@
             </sc-if>
             <sc-if value="{{ t.isGreen }}" hint-placeholder-val="{{ false }}">
             <div class="tw twg">
-              <p class="tmetric">{{ t.from }} → {{ t.to }}</p>
               <p class="tq">{{ t.quote }}</p>
               <div style="margin-top:auto;display:flex;align-items:center;gap:11px;">
                 <span style="width:38px;height:38px;border-radius:50%;background:#0E2620;color:#8FE9BF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">{{ t.init }}</span>
@@ -747,7 +747,6 @@
             </sc-if>
             <sc-if value="{{ t.isWhite }}" hint-placeholder-val="{{ false }}">
             <div class="tw tww">
-              <p class="tmetric">{{ t.from }} → {{ t.to }}</p>
               <p class="tq">{{ t.quote }}</p>
               <div style="margin-top:auto;display:flex;align-items:center;gap:11px;">
                 <span style="width:38px;height:38px;border-radius:50%;background:#0E2620;color:#8FE9BF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">{{ t.init }}</span>
@@ -778,7 +777,6 @@
             </sc-if>
             <sc-if value="{{ t.isGreen }}" hint-placeholder-val="{{ false }}">
             <div class="tw twg">
-              <p class="tmetric">{{ t.from }} → {{ t.to }}</p>
               <p class="tq">{{ t.quote }}</p>
               <div style="margin-top:auto;display:flex;align-items:center;gap:11px;">
                 <span style="width:38px;height:38px;border-radius:50%;background:#0E2620;color:#8FE9BF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">{{ t.init }}</span>
@@ -788,7 +786,6 @@
             </sc-if>
             <sc-if value="{{ t.isWhite }}" hint-placeholder-val="{{ false }}">
             <div class="tw tww">
-              <p class="tmetric">{{ t.from }} → {{ t.to }}</p>
               <p class="tq">{{ t.quote }}</p>
               <div style="margin-top:auto;display:flex;align-items:center;gap:11px;">
                 <span style="width:38px;height:38px;border-radius:50%;background:#0E2620;color:#8FE9BF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">{{ t.init }}</span>
@@ -1569,20 +1566,18 @@ class Component extends DCLogic {
       onToggle: () => this.setState(s => ({ openFaq: s.openFaq === i ? -1 : i })),
     }));
     const T = [
-      { quote: "« Skaleos a transformé notre prospection. On a un pipeline prévisible et on signe plus, en travaillant beaucoup moins. »", name: "Joseph A.", role: "CEO, Novalink" },
-      { quote: "« On a enfin un pipeline prévisible. L'équipe se concentre sur le closing, l'IA fait le reste. »", name: "Inès M.", role: "Head of Sales, Atelier 9" },
-      { quote: "« Le gain de temps est réel et mesurable. On a scalé sans recruter une seule personne. »", name: "Karim B.", role: "Fondateur, Korpus" },
-      { quote: "« L'automatisation du CRM nous fait gagner des heures chaque semaine. Aujourd'hui c'est indispensable. »", name: "Laura D.", role: "COO, Endosia" },
-      { quote: "« En 6 semaines, notre génération de rendez-vous a triplé. Skaleos a changé notre trajectoire. »", name: "Thomas R.", role: "CEO, Volta" },
-      { quote: "« Le reporting se fait tout seul. On pilote enfin sur des données fiables, en temps réel. »", name: "Sofia M.", role: "Head of Ops, Maora" },
-      { quote: "« Onboarding ultra simple et suivi continu. On a l'impression d'avoir une équipe IA en interne. »", name: "Hugo P.", role: "Fondateur, Atelier 9" },
-      { quote: "« Nos relances sont personnalisées et automatiques. Le taux de réponse a vraiment bondi. »", name: "Camille V.", role: "Directrice, Novalink" },
-      { quote: "« Tout s'intègre à nos outils existants. Zéro friction, que des résultats. »", name: "Yanis K.", role: "CTO, Korpus" },
+      { quote: "« On voulait vraiment un CRM ultra optimisé et ultra structuré, qui nous donne de la data sur la provenance des leads. »", name: "Jessim", role: "Growth Operator, Fitzye Coaching" },
+      { quote: "« En trois semaines, je me retrouve avec un centre de pilotage pour mon business. Tout est centralisé et automatisé. »", name: "Axel", role: "CEO, BootyLift" },
+      { quote: "« Le premier bénéfice que j'y vois, c'est la sérénité. Chaque semaine, je sais exactement quelles actions mettre en place. »", name: "Kevin", role: "CEO, Yadulink" },
+      { quote: "« On voit vraiment la différence depuis que tu es là. Tu nous as simplifié la vie, c'est trop bien. »", name: "Estelle", role: "Head of Setter, Elite Rugby" },
+      { quote: "« Avant, je n'avais jamais de data précise. Aujourd'hui, c'est totalement différent. »", name: "Flavio", role: "CEO, Pareto Santé" },
+      { quote: "« Corentin est ultra carré, ultra professionnel, il maîtrise absolument son sujet et il est ultra réactif. »", name: "Jessim", role: "Growth Operator, Fitzye Coaching" },
+      { quote: "« Je peux enfin me concentrer sur l'essentiel, la gestion de mes clients et ma création de contenu. »", name: "Axel", role: "CEO, BootyLift" },
+      { quote: "« Ça permet de repenser tout le business et de voir toutes les opportunités côté marketing et contenu. »", name: "Flavio", role: "CEO, Pareto Santé" },
+      { quote: "« En six ans, c'est dans le top 3 des investissements que j'ai faits. Je pilote mon business comme un vrai entrepreneur. »", name: "Flavio", role: "CEO, Pareto Santé" },
     ];
     const T2 = T.map((t) => ({ ...t, init: t.name.split(' ').map((w) => w[0]).join('').replace('.', '') }));
-    const metrics = [['15k€', '40k€/mois'], ['0€', '20k€/mois'], ['10k€', '50k€/mois'], ['20k€', '45k€/mois'], ['300k€', '700k€/an'], ['7k€', '25k€/mois'], ['0€', '30k€/mois'], ['12k€', '35k€/mois'], ['10k€', '60k€/mois']];
-    const Q = T2.map((t, i) => ({ ...t, from: metrics[i][0], to: metrics[i][1] }));
-    const q = (i, type) => ({ ...Q[i], isVideo: false, isGreen: type === 'g', isWhite: type === 'w' });
+    const q = (i, type) => ({ ...T2[i], isVideo: false, isGreen: type === 'g', isWhite: type === 'w' });
     const vid = (i, name, role, from, to, wistiaId) => ({ isVideo: true, isGreen: false, isWhite: false, name, role, from, to, slot: 'twall-vid-' + i, wistiaId, noWistia: !wistiaId });
     const dupRow = a => a.concat(a);
     const rowA = dupRow([vid(0, 'Estelle', '', '', '', 'cc5oq0ls1r'), q(0, 'w'), vid(1, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(4, 'g'), vid(4, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(1, 'w')]);
