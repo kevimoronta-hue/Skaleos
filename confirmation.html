@@ -112,6 +112,17 @@
     }
     .player-main { width: min(100%, 980px); margin: 0 auto; aspect-ratio: 16 / 9; }
     .player video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--ink); }
+    .player:fullscreen,
+    .player:-webkit-full-screen {
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+      background: var(--ink-deep);
+    }
+    .player:fullscreen video,
+    .player:-webkit-full-screen video { object-fit: contain; }
     .player::after {
       content: "";
       position: absolute;
@@ -172,7 +183,9 @@
     }
     .player.controls-on .controls,
     .player.is-playing:hover .controls,
-    .player:focus-within .controls { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+    .player:focus-within .controls,
+    .player:fullscreen .controls,
+    .player:-webkit-full-screen .controls { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
     .control {
       width: 38px;
       height: 38px;
@@ -507,7 +520,8 @@
         replay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4.5V9h4.5"></path></svg>',
         sound: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M16 8.5a5 5 0 0 1 0 7"></path></svg>',
         muted: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg>',
-        fullscreen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>'
+        fullscreen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>',
+        fullscreenExit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3"></path><path d="M21 8h-3a2 2 0 0 1-2-2V3"></path><path d="M3 16h3a2 2 0 0 1 2 2v3"></path><path d="M16 21v-3a2 2 0 0 1 2-2h3"></path></svg>'
       };
       const sources = {
         hero: {
@@ -601,10 +615,27 @@
         big.addEventListener('click', togglePlayback);
         toggle.addEventListener('click', togglePlayback);
         mute.addEventListener('click', () => { video.muted = !video.muted; syncMute(); showControls(); });
-        fullscreen.addEventListener('click', () => {
-          const request = player.requestFullscreen || player.webkitRequestFullscreen;
-          if (request) request.call(player);
+        const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+        const syncFullscreen = () => {
+          const isFullscreen = fullscreenElement() === player;
+          player.classList.toggle('is-fullscreen', isFullscreen);
+          fullscreen.innerHTML = isFullscreen ? icons.fullscreenExit : icons.fullscreen;
+          fullscreen.setAttribute('aria-label', isFullscreen ? 'Quitter le plein écran' : 'Plein écran');
+          if (isFullscreen) showControls();
+        };
+        fullscreen.addEventListener('click', async () => {
+          try {
+            if (fullscreenElement()) {
+              const exit = document.exitFullscreen || document.webkitExitFullscreen;
+              if (exit) await exit.call(document);
+            } else {
+              const request = player.requestFullscreen || player.webkitRequestFullscreen;
+              if (request) await request.call(player);
+            }
+          } catch (_) {}
         });
+        document.addEventListener('fullscreenchange', syncFullscreen);
+        document.addEventListener('webkitfullscreenchange', syncFullscreen);
         player.addEventListener('pointermove', showControls);
         player.addEventListener('pointerdown', showControls);
         video.addEventListener('click', togglePlayback);
@@ -651,7 +682,7 @@
         syncToggle();
         syncMute();
         bigIcon.innerHTML = icons.play;
-        fullscreen.innerHTML = icons.fullscreen;
+        syncFullscreen();
       });
 
       document.querySelectorAll('.youtube-player').forEach((player) => {
