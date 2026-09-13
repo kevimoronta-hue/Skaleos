@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <link rel="icon" href="/assets/skaleos-logo.png">
+  <link rel="icon" href="assets/skaleos-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://embed-ssl.wistia.com">
@@ -36,6 +36,10 @@
       font-family: Inter, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+    header {
+      color: #eaf6ef;
+      background: #0d4b37;
+    }
     img, video, iframe { display: block; max-width: 100%; }
     button, a { -webkit-tap-highlight-color: transparent; }
     button { font: inherit; }
@@ -46,32 +50,40 @@
       min-height: 74px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 24px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
     }
     .brand { color: var(--ink); text-decoration: none; }
     .brand img { width: 154px; height: auto; }
-    .status {
-      font: 700 11px/1.4 "Space Mono", monospace;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: #07674b;
-    }
+    header .brand img { filter: brightness(0) invert(1); }
 
     .hero {
+      position: relative;
+      overflow: hidden;
       min-height: calc(100dvh - 74px);
       display: grid;
       place-items: center;
       padding: 54px 0 72px;
+      color: #eaf6ef;
+      background: radial-gradient(ellipse at 50% 30%, #0d4b37 0%, #072a1e 75%, #041a12 100%);
     }
-    .hero-inner { width: 100%; text-align: center; }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 8% 22%, transparent 0 72px, rgba(143, 233, 191, .06) 73px 74px, transparent 75px),
+        radial-gradient(circle at 92% 74%, transparent 0 118px, rgba(143, 233, 191, .05) 119px 120px, transparent 121px);
+    }
+    .hero-inner { position: relative; z-index: 1; width: 100%; text-align: center; }
     .eyebrow {
       margin: 0 0 18px;
       font: 700 12px/1.4 "Space Mono", monospace;
       letter-spacing: .09em;
       text-transform: uppercase;
-      color: #07674b;
+      color: var(--mint);
     }
     h1, h2, h3 { font-family: Artifika, Georgia, serif; font-weight: 400; }
     h1 {
@@ -80,42 +92,31 @@
       font-size: clamp(42px, 6.2vw, 78px);
       line-height: 1.06;
       letter-spacing: -.035em;
+      color: #f4f8f5;
     }
     .highlight {
       display: inline-block;
       padding: .01em .2em .08em;
       border-radius: .24em;
-      background: var(--mint);
-      box-shadow: 0 0 0 5px rgba(255, 255, 255, .55), 0 12px 24px rgba(19, 179, 125, .2);
+      color: var(--ink);
+      background: #f2efe6;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
       transform: rotate(-1.5deg);
     }
     .lead {
       max-width: 650px;
       margin: 0 auto 34px;
-      color: var(--muted);
+      color: #d5e7de;
       font-size: clamp(17px, 1.55vw, 21px);
       line-height: 1.6;
       text-wrap: balance;
     }
-    .next-note {
-      width: fit-content;
-      max-width: 100%;
-      margin: 0 auto 24px;
-      padding: 11px 16px;
-      border: 1px solid rgba(19, 179, 125, .24);
-      border-radius: 14px;
-      background: rgba(143, 233, 191, .14);
-      color: #17493a;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
     .player {
       position: relative;
       overflow: hidden;
       border-radius: var(--radius);
       background: var(--ink);
-      box-shadow: 0 30px 80px rgba(14, 38, 32, .27);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
       isolation: isolate;
     }
     .player-main { width: min(100%, 980px); margin: 0 auto; aspect-ratio: 16 / 9; }
@@ -133,50 +134,51 @@
       left: 50%;
       top: 50%;
       z-index: 4;
-      width: 78px;
-      aspect-ratio: 1;
-      border: 1px solid rgba(143, 233, 191, .5);
+      width: clamp(62px, 8.5vw, 90px);
+      height: auto;
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(255, 255, 255, .42);
       border-radius: 50%;
-      background: rgba(14, 38, 32, .58);
-      color: var(--mint);
-      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(143, 233, 191, .24), rgba(14, 38, 32, .3));
+      color: #fff;
+      backdrop-filter: blur(14px) saturate(160%);
+      box-shadow: 0 14px 44px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 0 26px rgba(143, 233, 191, .14);
       transform: translate(-50%, -50%);
       cursor: pointer;
-      transition: transform .3s cubic-bezier(.22, 1, .36, 1), background .3s ease;
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), opacity .3s ease, visibility .3s;
     }
     .play-big:hover { transform: translate(-50%, -50%) scale(1.06); background: rgba(14, 38, 32, .78); }
     .play-big:active { transform: translate(-50%, -50%) scale(.96); }
-    .play-symbol {
-      display: block;
-      width: 0;
-      height: 0;
-      margin: 0 auto 0 5px;
-      border-left: 20px solid currentColor;
-      border-top: 13px solid transparent;
-      border-bottom: 13px solid transparent;
-    }
+    .play-symbol { display: block; width: 42%; height: 42%; }
+    .play-symbol svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, .45)); }
     .player.is-playing .play-big { opacity: 0; pointer-events: none; }
+    .loader { position: absolute; left: 50%; top: 50%; z-index: 5; opacity: 0; visibility: hidden; transform: translate(-50%, -50%); }
+    .player.is-loading .loader { opacity: 1; visibility: visible; }
+    .player.is-loading .play-big { opacity: 0; visibility: hidden; }
+    .spinner { display: block; width: 44px; height: 44px; border: 3px solid rgba(255, 255, 255, .25); border-top-color: var(--mint); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .controls {
       position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 5;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 11px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      border-radius: 15px;
-      background: rgba(8, 27, 20, .75);
-      backdrop-filter: blur(13px);
+      padding: 11px 15px;
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      background: linear-gradient(180deg, rgba(20, 34, 28, .24), rgba(14, 38, 32, .56));
+      backdrop-filter: blur(16px) saturate(150%);
       opacity: 0;
-      transform: translateY(8px);
+      visibility: hidden;
+      transform: translateY(4px);
       pointer-events: none;
-      transition: opacity .22s ease, transform .22s ease;
+      transition: opacity .28s ease, visibility .28s ease, transform .28s ease;
     }
     .player.controls-on .controls,
-    .player:focus-within .controls { opacity: 1; transform: none; pointer-events: auto; }
+    .player.is-playing:hover .controls,
+    .player:focus-within .controls { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
     .control {
       width: 38px;
       height: 38px;
@@ -189,13 +191,7 @@
     }
     .control:hover { background: rgba(255, 255, 255, .12); }
     .control:focus-visible, .play-big:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
-    .control span { display: block; position: relative; margin: auto; }
-    .pause-icon { width: 13px; height: 16px; border-left: 4px solid currentColor; border-right: 4px solid currentColor; }
-    .small-play { width: 0; height: 0; border-left: 12px solid currentColor; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
-    .sound-icon { width: 15px; height: 14px; border-left: 8px solid currentColor; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
-    .sound-icon::before { content: ""; position: absolute; left: -13px; top: -4px; width: 6px; height: 8px; background: currentColor; }
-    .sound-icon.is-muted::after { content: ""; position: absolute; left: -13px; top: -1px; width: 26px; height: 2px; background: var(--mint); transform: rotate(-45deg); }
-    .full-icon { width: 15px; height: 15px; border: 2px solid currentColor; }
+    .control svg { display: block; width: 20px; height: 20px; margin: auto; }
     .time { min-width: 44px; color: #e6f3ec; font: 12px/1 "Space Mono", monospace; font-variant-numeric: tabular-nums; }
     .seek { position: relative; height: 28px; flex: 1; cursor: pointer; touch-action: none; }
     .seek::before, .buffer, .progress {
@@ -210,15 +206,16 @@
     .seek::before { right: 0; background: rgba(255, 255, 255, .2); }
     .buffer { width: 0; background: rgba(255, 255, 255, .3); }
     .progress { width: 0; background: linear-gradient(90deg, var(--green), var(--mint)); }
+    .knob { position: absolute; top: 50%; left: 0; width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .45), 0 0 0 3px rgba(143, 233, 191, .38); transform: translate(-50%, -50%); pointer-events: none; }
 
     .proof { padding: 100px 0 112px; }
     .section-head { max-width: 720px; margin: 0 auto 54px; text-align: center; }
     h2 { margin: 0 0 16px; font-size: clamp(32px, 4.7vw, 58px); line-height: 1.12; letter-spacing: -.025em; }
     .section-head p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
-    .video-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .video-grid { display: grid; grid-template-columns: 1fr; gap: 58px; max-width: 390px; margin: 0 auto; }
     .video-card { margin: 0; }
     .player-portrait { aspect-ratio: 9 / 16; box-shadow: 0 18px 48px rgba(14, 38, 32, .17); }
-    .player-portrait .controls { left: 9px; right: 9px; bottom: 9px; gap: 5px; padding: 6px; }
+    .player-portrait .controls { gap: 8px; padding: 7px 10px; }
     .player-portrait .control { width: 34px; height: 34px; }
     .player-portrait .time { display: none; }
     .player-portrait .play-big { width: 62px; }
@@ -266,7 +263,11 @@
     .person strong, .person span { display: block; }
     .person span { margin-top: 3px; color: #9db8ab; font-size: 13px; }
     .case-video { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid rgba(143, 233, 191, .16); border-radius: var(--radius); background: #0d1512; box-shadow: 0 30px 70px rgba(0, 0, 0, .35); }
-    .case-video iframe { width: 100%; height: 100%; border: 0; }
+    .case-video::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(6, 18, 13, .34), transparent 55%); }
+    .case-video.is-loaded::after { display: none; }
+    .case-video .yt-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .case-video .play-big { z-index: 3; }
+    .case-video iframe { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; border: 0; }
 
     .closing { padding: 92px 0; text-align: center; }
     .closing h2 { max-width: 18ch; margin-inline: auto; }
@@ -277,7 +278,6 @@
     .foot a { color: var(--muted); font-size: 13px; text-underline-offset: 3px; }
 
     @media (max-width: 920px) {
-      .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
       .case-study { grid-template-columns: 1fr; gap: 24px; }
       .case-study:nth-child(even) .case-copy,
       .case-study:nth-child(even) .case-video { order: initial; }
@@ -286,23 +286,21 @@
       .shell { width: min(100% - 28px, 1180px); }
       .site-head { min-height: 66px; }
       .brand img { width: 128px; }
-      .status { max-width: 120px; text-align: right; font-size: 9px; }
       .hero { min-height: auto; padding: 64px 0 70px; }
       h1 { font-size: clamp(38px, 12vw, 54px); }
       .lead { font-size: 16px; }
       .player-main { border-radius: 18px; }
       .play-big { width: 62px; }
-      .controls { left: 8px; right: 8px; bottom: 8px; gap: 5px; padding: 6px; border-radius: 12px; }
+      .controls { gap: 5px; padding: 8px 9px; }
       .control { width: 34px; height: 34px; }
       .time { display: none; }
       .proof, .cases { padding: 78px 0 86px; }
       .section-head { margin-bottom: 36px; }
       .section-head p { font-size: 15px; }
-      .video-grid { gap: 22px 10px; }
+      .video-grid { gap: 48px; max-width: 340px; }
       .player-portrait { border-radius: 16px; }
       .player-portrait .play-big { width: 54px; }
-      .player-portrait .controls { flex-wrap: wrap; }
-      .player-portrait .seek { order: 4; flex-basis: 100%; height: 18px; }
+      .player-portrait .seek { height: 26px; }
       .video-name { font-size: 14px; }
       .video-role { font-size: 12px; }
       .case-list { gap: 48px; }
@@ -323,9 +321,8 @@
   <header>
     <div class="shell site-head">
       <a class="brand" href="/" aria-label="Retour à l'accueil Skaleos">
-        <img src="/assets/skaleos-logo.png" alt="Skaleos">
+        <img src="assets/skaleos-logo.png" alt="Skaleos">
       </a>
-      <span class="status">Rendez-vous confirmé</span>
     </div>
   </header>
 
@@ -334,19 +331,19 @@
       <div class="shell hero-inner">
         <p class="eyebrow">Merci pour ta confiance</p>
         <h1>Ton appel est bien <span class="highlight">réservé.</span></h1>
-        <p class="lead">Tu vas recevoir toutes les informations par e-mail. Avant notre échange, regarde cette courte vidéo pour préparer au mieux notre appel.</p>
-        <p class="next-note">Pense à ajouter le rendez-vous à ton agenda et installe-toi dans un endroit calme le moment venu.</p>
+        <p class="lead">Regarde cette courte vidéo pour préparer au mieux notre appel.</p>
 
         <div class="player player-main" data-video-key="hero">
-          <video playsinline preload="metadata" poster="/assets/wistia/wqdh0pom7s.jpg"></video>
+          <video playsinline preload="metadata" poster="assets/wistia/wqdh0pom7s.jpg"></video>
           <button class="play-big" type="button" aria-label="Lire la vidéo"><span class="play-symbol" aria-hidden="true"></span></button>
+          <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
           <div class="controls">
-            <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+            <button class="control toggle" type="button" aria-label="Lecture"></button>
             <span class="time current">0:00</span>
-            <div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div>
+            <div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div>
             <span class="time duration">0:00</span>
-            <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
-            <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+            <button class="control mute" type="button" aria-label="Couper le son"></button>
+            <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
           </div>
         </div>
       </div>
@@ -355,58 +352,61 @@
     <section class="proof" aria-labelledby="temoignages-title">
       <div class="shell">
         <div class="section-head">
-          <h2 id="temoignages-title">Ce sont eux qui en parlent le mieux.</h2>
-          <p>Quatre retours directs d’entrepreneurs accompagnés par Skaleos.</p>
+          <h2 id="temoignages-title">Ce sont mes clients qui en parlent le mieux.</h2>
         </div>
         <div class="video-grid">
           <figure class="video-card">
             <div class="player player-portrait" data-video-key="cc5oq0ls1r">
-              <video playsinline preload="none" poster="/assets/wistia/cc5oq0ls1r.jpg"></video>
+              <video playsinline preload="none" poster="assets/wistia/cc5oq0ls1r.jpg"></video>
               <button class="play-big" type="button" aria-label="Lire le témoignage d’Estelle"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
               <div class="controls">
-                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
-                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
-                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
-                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
               </div>
             </div>
-            <figcaption><p class="video-name">Estelle</p><p class="video-role">Cliente Skaleos</p></figcaption>
+            <figcaption><p class="video-name">Estelle</p><p class="video-role">Head of Setter, Elite Rugby</p></figcaption>
           </figure>
           <figure class="video-card">
             <div class="player player-portrait" data-video-key="78qplhkpbe">
-              <video playsinline preload="none" poster="/assets/wistia/78qplhkpbe.jpg"></video>
+              <video playsinline preload="none" poster="assets/wistia/78qplhkpbe.jpg"></video>
               <button class="play-big" type="button" aria-label="Lire le témoignage de Florian"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
               <div class="controls">
-                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
-                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
-                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
-                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
               </div>
             </div>
             <figcaption><p class="video-name">Florian</p><p class="video-role">CEO, Yazee</p></figcaption>
           </figure>
           <figure class="video-card">
             <div class="player player-portrait" data-video-key="94tineazxz">
-              <video playsinline preload="none" poster="/assets/wistia/94tineazxz.jpg"></video>
+              <video playsinline preload="none" poster="assets/wistia/94tineazxz.jpg"></video>
               <button class="play-big" type="button" aria-label="Lire le témoignage de Flavio"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
               <div class="controls">
-                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
-                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
-                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
-                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
               </div>
             </div>
             <figcaption><p class="video-name">Flavio</p><p class="video-role">CEO, Pareto Santé</p></figcaption>
           </figure>
           <figure class="video-card">
             <div class="player player-portrait" data-video-key="qtccki73ws">
-              <video playsinline preload="none" poster="/assets/wistia/qtccki73ws.jpg"></video>
+              <video playsinline preload="none" poster="assets/wistia/qtccki73ws.jpg"></video>
               <button class="play-big" type="button" aria-label="Lire le témoignage de Kevin"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
               <div class="controls">
-                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
-                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
-                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
-                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
               </div>
             </div>
             <figcaption><p class="video-name">Kevin</p><p class="video-role">CEO, Yadulink</p></figcaption>
@@ -424,7 +424,7 @@
         <div class="case-list">
           <article class="case-study">
             <div class="case-copy">
-              <img class="case-brand" src="/assets/logo-yadulink.webp" alt="Yadulink">
+              <img class="case-brand" src="assets/logo-yadulink.webp" alt="Yadulink">
               <h3>Un pilotage commercial enfin lisible.</h3>
               <ul>
                 <li>Plus de 20 ans d’expérience en vente</li>
@@ -432,16 +432,17 @@
                 <li>Une vision claire de chaque perte de conversion</li>
               </ul>
               <p class="quote">« Aujourd’hui je sais exactement à chaque étape du funnel où je perds de la conversion. Le premier bénéfice, c’est la sérénité. »</p>
-              <div class="person"><img src="/assets/face-kevin.jpg" alt="Kevin de Yadulink"><div><strong>Kevin</strong><span>Yadulink</span></div></div>
+              <div class="person"><img src="assets/face-kevin.jpg" alt="Kevin de Yadulink"><div><strong>Kevin</strong><span>Yadulink</span></div></div>
             </div>
-            <div class="case-video">
-              <iframe src="https://www.youtube-nocookie.com/embed/nWewM3Mpr5o?rel=0&amp;playsinline=1&amp;modestbranding=1" title="Étude de cas Yadulink avec Kevin" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="case-video youtube-player" data-youtube-id="nWewM3Mpr5o" data-youtube-title="Étude de cas Yadulink avec Kevin">
+              <img class="yt-poster" src="assets/yt/nWewM3Mpr5o.jpg" alt="Aperçu de l’étude de cas Yadulink avec Kevin">
+              <button class="play-big" type="button" aria-label="Lire l’étude de cas Yadulink"><span class="play-symbol" aria-hidden="true"></span></button>
             </div>
           </article>
 
           <article class="case-study">
             <div class="case-copy">
-              <img class="case-brand" src="/assets/partners/yazee.png" alt="Yazee">
+              <img class="case-brand" src="assets/partners/yazee.png" alt="Yazee">
               <h3>Une équipe sales réunie au même endroit.</h3>
               <ul>
                 <li>Une équipe commerciale en forte croissance</li>
@@ -449,10 +450,11 @@
                 <li>Des statistiques et commissions calculées automatiquement</li>
               </ul>
               <p class="quote">« Dès que tu as un setter, un closer et une équipe, c’est un gain de temps conséquent. Tout est au même endroit. »</p>
-              <div class="person"><img src="/assets/face-florian.png" alt="Florian de Yazee"><div><strong>Florian</strong><span>Yazee</span></div></div>
+              <div class="person"><img src="assets/face-florian.png" alt="Florian de Yazee"><div><strong>Florian</strong><span>Yazee</span></div></div>
             </div>
-            <div class="case-video">
-              <iframe src="https://www.youtube-nocookie.com/embed/C41WcoMRwmQ?rel=0&amp;playsinline=1&amp;modestbranding=1" title="Étude de cas Yazee avec Florian" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="case-video youtube-player" data-youtube-id="C41WcoMRwmQ" data-youtube-title="Étude de cas Yazee avec Florian">
+              <img class="yt-poster" src="assets/yt/C41WcoMRwmQ.jpg" alt="Aperçu de l’étude de cas Yazee avec Florian">
+              <button class="play-big" type="button" aria-label="Lire l’étude de cas Yazee"><span class="play-symbol" aria-hidden="true"></span></button>
             </div>
           </article>
         </div>
@@ -469,13 +471,21 @@
 
   <footer>
     <div class="shell foot">
-      <a class="brand" href="/" aria-label="Retour à l'accueil Skaleos"><img src="/assets/skaleos-logo.png" alt="Skaleos"></a>
+      <a class="brand" href="/" aria-label="Retour à l'accueil Skaleos"><img src="assets/skaleos-logo.png" alt="Skaleos"></a>
       <a href="mailto:corentin@skaleos.fr">corentin@skaleos.fr</a>
     </div>
   </footer>
 
   <script>
     (() => {
+      const icons = {
+        play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>',
+        pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"></path></svg>',
+        replay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4.5V9h4.5"></path></svg>',
+        sound: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M16 8.5a5 5 0 0 1 0 7"></path></svg>',
+        muted: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg>',
+        fullscreen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>'
+      };
       const sources = {
         hero: {
           sd: 'https://embed-ssl.wistia.com/deliveries/c7e4e5c6a5043aa42ec027273207c0664d028dbb.bin',
@@ -511,21 +521,21 @@
         const video = player.querySelector('video');
         const source = sources[player.dataset.videoKey];
         const big = player.querySelector('.play-big');
+        const bigIcon = player.querySelector('.play-symbol');
         const toggle = player.querySelector('.toggle');
-        const toggleIcon = toggle.querySelector('span');
         const mute = player.querySelector('.mute');
-        const muteIcon = mute.querySelector('span');
         const fullscreen = player.querySelector('.fullscreen');
         const current = player.querySelector('.current');
         const duration = player.querySelector('.duration');
         const seek = player.querySelector('.seek');
         const progress = player.querySelector('.progress');
         const buffer = player.querySelector('.buffer');
+        const knob = player.querySelector('.knob');
         let controlsTimer;
         let seeking = false;
 
         const ensureSource = () => {
-          if (!video.src && source) video.src = window.innerWidth <= 760 ? source.sd : source.hd;
+          if (!video.getAttribute('src') && source) video.setAttribute('src', window.innerWidth <= 760 ? source.sd : source.hd);
         };
         const showControls = () => {
           player.classList.add('controls-on');
@@ -533,11 +543,11 @@
           if (!video.paused) controlsTimer = setTimeout(() => player.classList.remove('controls-on'), 2600);
         };
         const syncToggle = () => {
-          toggleIcon.className = video.paused ? 'small-play' : 'pause-icon';
+          toggle.innerHTML = video.paused ? icons.play : icons.pause;
           toggle.setAttribute('aria-label', video.paused ? 'Lecture' : 'Pause');
         };
         const syncMute = () => {
-          muteIcon.className = `sound-icon${video.muted || video.volume === 0 ? ' is-muted' : ''}`;
+          mute.innerHTML = video.muted || video.volume === 0 ? icons.muted : icons.sound;
           mute.setAttribute('aria-label', video.muted || video.volume === 0 ? 'Activer le son' : 'Couper le son');
         };
         const play = () => {
@@ -547,7 +557,7 @@
             if (otherVideo !== video && !otherVideo.paused) otherVideo.pause();
           });
           const promise = video.play();
-          if (promise) promise.catch(() => player.classList.remove('is-playing'));
+          if (promise) promise.catch(() => { player.classList.remove('is-playing'); bigIcon.innerHTML = icons.play; });
         };
         const togglePlayback = () => video.paused ? play() : video.pause();
         const updateSeek = (clientX) => {
@@ -567,9 +577,13 @@
         player.addEventListener('pointermove', showControls);
         player.addEventListener('pointerdown', showControls);
         video.addEventListener('click', togglePlayback);
-        video.addEventListener('play', () => { player.classList.add('is-playing'); syncToggle(); showControls(); });
-        video.addEventListener('pause', () => { player.classList.remove('is-playing'); player.classList.add('controls-on'); syncToggle(); });
-        video.addEventListener('ended', () => { player.classList.remove('is-playing'); player.classList.add('controls-on'); syncToggle(); });
+        video.addEventListener('play', () => { player.classList.add('is-playing'); bigIcon.innerHTML = icons.play; syncToggle(); showControls(); });
+        video.addEventListener('playing', () => player.classList.remove('is-loading'));
+        video.addEventListener('pause', () => { player.classList.remove('is-playing', 'is-loading'); bigIcon.innerHTML = icons.play; player.classList.add('controls-on'); syncToggle(); });
+        video.addEventListener('waiting', () => player.classList.add('is-loading'));
+        video.addEventListener('stalled', () => player.classList.add('is-loading'));
+        video.addEventListener('canplay', () => player.classList.remove('is-loading'));
+        video.addEventListener('ended', () => { player.classList.remove('is-playing', 'is-loading'); bigIcon.innerHTML = icons.replay; player.classList.add('controls-on'); syncToggle(); });
         video.addEventListener('loadedmetadata', () => { duration.textContent = formatTime(video.duration); });
         video.addEventListener('durationchange', () => { duration.textContent = formatTime(video.duration); });
         video.addEventListener('volumechange', syncMute);
@@ -577,6 +591,7 @@
           if (seeking) return;
           const ratio = video.duration ? video.currentTime / video.duration : 0;
           progress.style.width = `${ratio * 100}%`;
+          knob.style.left = `${ratio * 100}%`;
           current.textContent = formatTime(video.currentTime);
           seek.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
         });
@@ -604,6 +619,22 @@
 
         syncToggle();
         syncMute();
+        bigIcon.innerHTML = icons.play;
+        fullscreen.innerHTML = icons.fullscreen;
+      });
+
+      document.querySelectorAll('.youtube-player').forEach((player) => {
+        const button = player.querySelector('.play-big');
+        button.querySelector('.play-symbol').innerHTML = icons.play;
+        button.addEventListener('click', () => {
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${player.dataset.youtubeId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
+          iframe.title = player.dataset.youtubeTitle;
+          iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          player.classList.add('is-loaded');
+          player.replaceChildren(iframe);
+        }, { once: true });
       });
     })();
   </script>
