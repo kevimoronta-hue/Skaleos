@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ton appel est confirmé | Skaleos</title>
+  <meta name="description" content="Ton appel stratégique Skaleos est bien réservé. Voici les prochaines étapes avant notre échange.">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="/assets/skaleos-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://embed-ssl.wistia.com">
+  <link rel="preconnect" href="https://www.youtube-nocookie.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Artifika&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+  <style>
+    :root {
+      --ink: #0e2620;
+      --ink-deep: #071310;
+      --green: #13b37d;
+      --mint: #8fe9bf;
+      --paper: #f4f4f2;
+      --paper-soft: #ebeee9;
+      --muted: #56635d;
+      --line: rgba(14, 38, 32, .12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    img, video, iframe { display: block; max-width: 100%; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    ::selection { background: var(--mint); color: var(--ink); }
+
+    .shell { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+    .site-head {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { color: var(--ink); text-decoration: none; }
+    .brand img { width: 154px; height: auto; }
+    .status {
+      font: 700 11px/1.4 "Space Mono", monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #07674b;
+    }
+
+    .hero {
+      min-height: calc(100dvh - 74px);
+      display: grid;
+      place-items: center;
+      padding: 54px 0 72px;
+    }
+    .hero-inner { width: 100%; text-align: center; }
+    .eyebrow {
+      margin: 0 0 18px;
+      font: 700 12px/1.4 "Space Mono", monospace;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: #07674b;
+    }
+    h1, h2, h3 { font-family: Artifika, Georgia, serif; font-weight: 400; }
+    h1 {
+      max-width: 15ch;
+      margin: 0 auto 20px;
+      font-size: clamp(42px, 6.2vw, 78px);
+      line-height: 1.06;
+      letter-spacing: -.035em;
+    }
+    .highlight {
+      display: inline-block;
+      padding: .01em .2em .08em;
+      border-radius: .24em;
+      background: var(--mint);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, .55), 0 12px 24px rgba(19, 179, 125, .2);
+      transform: rotate(-1.5deg);
+    }
+    .lead {
+      max-width: 650px;
+      margin: 0 auto 34px;
+      color: var(--muted);
+      font-size: clamp(17px, 1.55vw, 21px);
+      line-height: 1.6;
+      text-wrap: balance;
+    }
+    .next-note {
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto 24px;
+      padding: 11px 16px;
+      border: 1px solid rgba(19, 179, 125, .24);
+      border-radius: 14px;
+      background: rgba(143, 233, 191, .14);
+      color: #17493a;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .player {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--ink);
+      box-shadow: 0 30px 80px rgba(14, 38, 32, .27);
+      isolation: isolate;
+    }
+    .player-main { width: min(100%, 980px); margin: 0 auto; aspect-ratio: 16 / 9; }
+    .player video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--ink); }
+    .player::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(6, 18, 13, .64), rgba(6, 18, 13, .08) 44%, transparent 65%);
+    }
+    .play-big {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 4;
+      width: 78px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(143, 233, 191, .5);
+      border-radius: 50%;
+      background: rgba(14, 38, 32, .58);
+      color: var(--mint);
+      backdrop-filter: blur(12px);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: transform .3s cubic-bezier(.22, 1, .36, 1), background .3s ease;
+    }
+    .play-big:hover { transform: translate(-50%, -50%) scale(1.06); background: rgba(14, 38, 32, .78); }
+    .play-big:active { transform: translate(-50%, -50%) scale(.96); }
+    .play-symbol {
+      display: block;
+      width: 0;
+      height: 0;
+      margin: 0 auto 0 5px;
+      border-left: 20px solid currentColor;
+      border-top: 13px solid transparent;
+      border-bottom: 13px solid transparent;
+    }
+    .player.is-playing .play-big { opacity: 0; pointer-events: none; }
+    .controls {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 11px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 15px;
+      background: rgba(8, 27, 20, .75);
+      backdrop-filter: blur(13px);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity .22s ease, transform .22s ease;
+    }
+    .player.controls-on .controls,
+    .player:focus-within .controls { opacity: 1; transform: none; pointer-events: auto; }
+    .control {
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #ecfff6;
+      cursor: pointer;
+    }
+    .control:hover { background: rgba(255, 255, 255, .12); }
+    .control:focus-visible, .play-big:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+    .control span { display: block; position: relative; margin: auto; }
+    .pause-icon { width: 13px; height: 16px; border-left: 4px solid currentColor; border-right: 4px solid currentColor; }
+    .small-play { width: 0; height: 0; border-left: 12px solid currentColor; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+    .sound-icon { width: 15px; height: 14px; border-left: 8px solid currentColor; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+    .sound-icon::before { content: ""; position: absolute; left: -13px; top: -4px; width: 6px; height: 8px; background: currentColor; }
+    .sound-icon.is-muted::after { content: ""; position: absolute; left: -13px; top: -1px; width: 26px; height: 2px; background: var(--mint); transform: rotate(-45deg); }
+    .full-icon { width: 15px; height: 15px; border: 2px solid currentColor; }
+    .time { min-width: 44px; color: #e6f3ec; font: 12px/1 "Space Mono", monospace; font-variant-numeric: tabular-nums; }
+    .seek { position: relative; height: 28px; flex: 1; cursor: pointer; touch-action: none; }
+    .seek::before, .buffer, .progress {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      height: 4px;
+      border-radius: 999px;
+      transform: translateY(-50%);
+    }
+    .seek::before { right: 0; background: rgba(255, 255, 255, .2); }
+    .buffer { width: 0; background: rgba(255, 255, 255, .3); }
+    .progress { width: 0; background: linear-gradient(90deg, var(--green), var(--mint)); }
+
+    .proof { padding: 100px 0 112px; }
+    .section-head { max-width: 720px; margin: 0 auto 54px; text-align: center; }
+    h2 { margin: 0 0 16px; font-size: clamp(32px, 4.7vw, 58px); line-height: 1.12; letter-spacing: -.025em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
+    .video-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .video-card { margin: 0; }
+    .player-portrait { aspect-ratio: 9 / 16; box-shadow: 0 18px 48px rgba(14, 38, 32, .17); }
+    .player-portrait .controls { left: 9px; right: 9px; bottom: 9px; gap: 5px; padding: 6px; }
+    .player-portrait .control { width: 34px; height: 34px; }
+    .player-portrait .time { display: none; }
+    .player-portrait .play-big { width: 62px; }
+    .video-name { margin: 14px 2px 0; font-weight: 700; font-size: 15px; }
+    .video-role { margin: 4px 2px 0; color: var(--muted); font-size: 13px; }
+
+    .cases {
+      position: relative;
+      overflow: hidden;
+      padding: 108px 0 120px;
+      color: #eef8f3;
+      background: radial-gradient(110% 90% at 15% 0%, #123329 0%, #0b1c16 48%, var(--ink-deep) 100%);
+    }
+    .cases::before {
+      content: "Σ";
+      position: absolute;
+      left: -5vw;
+      top: -80px;
+      color: rgba(255, 255, 255, .022);
+      font: 520px/.8 Artifika, serif;
+      pointer-events: none;
+    }
+    .cases .section-head { position: relative; }
+    .cases h2 { color: #fff; }
+    .cases .section-head p { color: #a9c4b7; }
+    .case-list { position: relative; display: grid; gap: 72px; }
+    .case-study { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 38px; align-items: center; }
+    .case-study:nth-child(even) .case-copy { order: 2; }
+    .case-study:nth-child(even) .case-video { order: 1; }
+    .case-copy {
+      padding: clamp(24px, 3vw, 38px);
+      border: 1px solid rgba(143, 233, 191, .18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .045);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, .2);
+    }
+    .case-brand { height: 48px; width: 145px; object-fit: contain; object-position: left center; margin-bottom: 24px; }
+    .case-copy h3 { margin: 0 0 16px; color: #fff; font-size: clamp(25px, 2.8vw, 38px); line-height: 1.2; }
+    .case-copy ul { margin: 0 0 24px; padding: 0; list-style: none; display: grid; gap: 11px; }
+    .case-copy li { position: relative; padding-left: 18px; color: #cae0d6; font-size: 15px; line-height: 1.55; }
+    .case-copy li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border-radius: 2px; background: var(--mint); }
+    .quote { margin: 0; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .11); color: #fff; font-size: 15px; line-height: 1.6; font-style: italic; }
+    .person { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+    .person img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+    .person strong, .person span { display: block; }
+    .person span { margin-top: 3px; color: #9db8ab; font-size: 13px; }
+    .case-video { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid rgba(143, 233, 191, .16); border-radius: var(--radius); background: #0d1512; box-shadow: 0 30px 70px rgba(0, 0, 0, .35); }
+    .case-video iframe { width: 100%; height: 100%; border: 0; }
+
+    .closing { padding: 92px 0; text-align: center; }
+    .closing h2 { max-width: 18ch; margin-inline: auto; }
+    .closing p { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 17px; line-height: 1.65; }
+    footer { border-top: 1px solid var(--line); }
+    .foot { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .foot img { width: 130px; }
+    .foot a { color: var(--muted); font-size: 13px; text-underline-offset: 3px; }
+
+    @media (max-width: 920px) {
+      .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
+      .case-study { grid-template-columns: 1fr; gap: 24px; }
+      .case-study:nth-child(even) .case-copy,
+      .case-study:nth-child(even) .case-video { order: initial; }
+    }
+    @media (max-width: 600px) {
+      .shell { width: min(100% - 28px, 1180px); }
+      .site-head { min-height: 66px; }
+      .brand img { width: 128px; }
+      .status { max-width: 120px; text-align: right; font-size: 9px; }
+      .hero { min-height: auto; padding: 64px 0 70px; }
+      h1 { font-size: clamp(38px, 12vw, 54px); }
+      .lead { font-size: 16px; }
+      .player-main { border-radius: 18px; }
+      .play-big { width: 62px; }
+      .controls { left: 8px; right: 8px; bottom: 8px; gap: 5px; padding: 6px; border-radius: 12px; }
+      .control { width: 34px; height: 34px; }
+      .time { display: none; }
+      .proof, .cases { padding: 78px 0 86px; }
+      .section-head { margin-bottom: 36px; }
+      .section-head p { font-size: 15px; }
+      .video-grid { gap: 22px 10px; }
+      .player-portrait { border-radius: 16px; }
+      .player-portrait .play-big { width: 54px; }
+      .player-portrait .controls { flex-wrap: wrap; }
+      .player-portrait .seek { order: 4; flex-basis: 100%; height: 18px; }
+      .video-name { font-size: 14px; }
+      .video-role { font-size: 12px; }
+      .case-list { gap: 48px; }
+      .case-copy, .case-video { border-radius: 18px; }
+      .closing { padding: 72px 0; }
+      .foot { padding: 22px 0; flex-direction: column; justify-content: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .play-big, .controls { backdrop-filter: none; background: rgba(8, 27, 20, .94); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell site-head">
+      <a class="brand" href="/" aria-label="Retour à l'accueil Skaleos">
+        <img src="/assets/skaleos-logo.png" alt="Skaleos">
+      </a>
+      <span class="status">Rendez-vous confirmé</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-inner">
+        <p class="eyebrow">Merci pour ta confiance</p>
+        <h1>Ton appel est bien <span class="highlight">réservé.</span></h1>
+        <p class="lead">Tu vas recevoir toutes les informations par e-mail. Avant notre échange, regarde cette courte vidéo pour préparer au mieux notre appel.</p>
+        <p class="next-note">Pense à ajouter le rendez-vous à ton agenda et installe-toi dans un endroit calme le moment venu.</p>
+
+        <div class="player player-main" data-video-key="hero">
+          <video playsinline preload="metadata" poster="/assets/wistia/wqdh0pom7s.jpg"></video>
+          <button class="play-big" type="button" aria-label="Lire la vidéo"><span class="play-symbol" aria-hidden="true"></span></button>
+          <div class="controls">
+            <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+            <span class="time current">0:00</span>
+            <div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div>
+            <span class="time duration">0:00</span>
+            <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
+            <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="temoignages-title">
+      <div class="shell">
+        <div class="section-head">
+          <h2 id="temoignages-title">Ce sont eux qui en parlent le mieux.</h2>
+          <p>Quatre retours directs d’entrepreneurs accompagnés par Skaleos.</p>
+        </div>
+        <div class="video-grid">
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="cc5oq0ls1r">
+              <video playsinline preload="none" poster="/assets/wistia/cc5oq0ls1r.jpg"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage d’Estelle"><span class="play-symbol" aria-hidden="true"></span></button>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Estelle</p><p class="video-role">Cliente Skaleos</p></figcaption>
+          </figure>
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="78qplhkpbe">
+              <video playsinline preload="none" poster="/assets/wistia/78qplhkpbe.jpg"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage de Florian"><span class="play-symbol" aria-hidden="true"></span></button>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Florian</p><p class="video-role">CEO, Yazee</p></figcaption>
+          </figure>
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="94tineazxz">
+              <video playsinline preload="none" poster="/assets/wistia/94tineazxz.jpg"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage de Flavio"><span class="play-symbol" aria-hidden="true"></span></button>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Flavio</p><p class="video-role">CEO, Pareto Santé</p></figcaption>
+          </figure>
+          <figure class="video-card">
+            <div class="player player-portrait" data-video-key="qtccki73ws">
+              <video playsinline preload="none" poster="/assets/wistia/qtccki73ws.jpg"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage de Kevin"><span class="play-symbol" aria-hidden="true"></span></button>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"><span class="small-play" aria-hidden="true"></span></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"><span class="sound-icon" aria-hidden="true"></span></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"><span class="full-icon" aria-hidden="true"></span></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Kevin</p><p class="video-role">CEO, Yadulink</p></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="cases" aria-labelledby="cas-title">
+      <div class="shell">
+        <div class="section-head">
+          <h2 id="cas-title">Deux systèmes. Deux transformations concrètes.</h2>
+          <p>Découvre comment Skaleos a structuré leur suivi commercial au quotidien.</p>
+        </div>
+        <div class="case-list">
+          <article class="case-study">
+            <div class="case-copy">
+              <img class="case-brand" src="/assets/logo-yadulink.webp" alt="Yadulink">
+              <h3>Un pilotage commercial enfin lisible.</h3>
+              <ul>
+                <li>Plus de 20 ans d’expérience en vente</li>
+                <li>Un suivi auparavant géré à la main dans Google Sheets</li>
+                <li>Une vision claire de chaque perte de conversion</li>
+              </ul>
+              <p class="quote">« Aujourd’hui je sais exactement à chaque étape du funnel où je perds de la conversion. Le premier bénéfice, c’est la sérénité. »</p>
+              <div class="person"><img src="/assets/face-kevin.jpg" alt="Kevin de Yadulink"><div><strong>Kevin</strong><span>Yadulink</span></div></div>
+            </div>
+            <div class="case-video">
+              <iframe src="https://www.youtube-nocookie.com/embed/nWewM3Mpr5o?rel=0&amp;playsinline=1&amp;modestbranding=1" title="Étude de cas Yadulink avec Kevin" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </article>
+
+          <article class="case-study">
+            <div class="case-copy">
+              <img class="case-brand" src="/assets/partners/yazee.png" alt="Yazee">
+              <h3>Une équipe sales réunie au même endroit.</h3>
+              <ul>
+                <li>Une équipe commerciale en forte croissance</li>
+                <li>Des performances devenues mesurables et fiables</li>
+                <li>Des statistiques et commissions calculées automatiquement</li>
+              </ul>
+              <p class="quote">« Dès que tu as un setter, un closer et une équipe, c’est un gain de temps conséquent. Tout est au même endroit. »</p>
+              <div class="person"><img src="/assets/face-florian.png" alt="Florian de Yazee"><div><strong>Florian</strong><span>Yazee</span></div></div>
+            </div>
+            <div class="case-video">
+              <iframe src="https://www.youtube-nocookie.com/embed/C41WcoMRwmQ?rel=0&amp;playsinline=1&amp;modestbranding=1" title="Étude de cas Yazee avec Florian" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="shell">
+        <h2>Tout est prêt pour notre échange.</h2>
+        <p>Je te retrouve à l’heure prévue avec une première lecture de ta situation. Tu peux maintenant fermer cette page.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell foot">
+      <a class="brand" href="/" aria-label="Retour à l'accueil Skaleos"><img src="/assets/skaleos-logo.png" alt="Skaleos"></a>
+      <a href="mailto:corentin@skaleos.fr">corentin@skaleos.fr</a>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const sources = {
+        hero: {
+          sd: 'https://embed-ssl.wistia.com/deliveries/c7e4e5c6a5043aa42ec027273207c0664d028dbb.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/c957418be037ff02251c2b670fd6709c58826f0b.bin'
+        },
+        cc5oq0ls1r: {
+          sd: 'https://embed-ssl.wistia.com/deliveries/a52c9cda1376a09cf6cbf1692f4909b59fb6d777.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/bb28c0c98b977f16e1412fb870c0899a1c8f18c9.bin'
+        },
+        '78qplhkpbe': {
+          sd: 'https://embed-ssl.wistia.com/deliveries/0e5eb8624047ce5257a738071081178864276e6a.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/0205c5b7c52a1bac15441fba468a4745d719b6a2.bin'
+        },
+        '94tineazxz': {
+          sd: 'https://embed-ssl.wistia.com/deliveries/bbbce5c93793cefab391fbfe81709f26b979437c.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/7362d17859f76f86846e249fda01ed2403a76987.bin'
+        },
+        qtccki73ws: {
+          sd: 'https://embed-ssl.wistia.com/deliveries/a0d0b77d6af5f460282c98a955ccc8fb34406479.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/1f8d5f321ceac5fb03eeb73c20140c56147c3c00.bin'
+        }
+      };
+
+      const players = [...document.querySelectorAll('.player[data-video-key]')];
+      const formatTime = (seconds) => {
+        const safe = Math.max(0, Math.floor(seconds || 0));
+        const minutes = Math.floor(safe / 60);
+        const rest = safe % 60;
+        return `${minutes}:${rest < 10 ? '0' : ''}${rest}`;
+      };
+
+      players.forEach((player) => {
+        const video = player.querySelector('video');
+        const source = sources[player.dataset.videoKey];
+        const big = player.querySelector('.play-big');
+        const toggle = player.querySelector('.toggle');
+        const toggleIcon = toggle.querySelector('span');
+        const mute = player.querySelector('.mute');
+        const muteIcon = mute.querySelector('span');
+        const fullscreen = player.querySelector('.fullscreen');
+        const current = player.querySelector('.current');
+        const duration = player.querySelector('.duration');
+        const seek = player.querySelector('.seek');
+        const progress = player.querySelector('.progress');
+        const buffer = player.querySelector('.buffer');
+        let controlsTimer;
+        let seeking = false;
+
+        const ensureSource = () => {
+          if (!video.src && source) video.src = window.innerWidth <= 760 ? source.sd : source.hd;
+        };
+        const showControls = () => {
+          player.classList.add('controls-on');
+          clearTimeout(controlsTimer);
+          if (!video.paused) controlsTimer = setTimeout(() => player.classList.remove('controls-on'), 2600);
+        };
+        const syncToggle = () => {
+          toggleIcon.className = video.paused ? 'small-play' : 'pause-icon';
+          toggle.setAttribute('aria-label', video.paused ? 'Lecture' : 'Pause');
+        };
+        const syncMute = () => {
+          muteIcon.className = `sound-icon${video.muted || video.volume === 0 ? ' is-muted' : ''}`;
+          mute.setAttribute('aria-label', video.muted || video.volume === 0 ? 'Activer le son' : 'Couper le son');
+        };
+        const play = () => {
+          ensureSource();
+          players.forEach((other) => {
+            const otherVideo = other.querySelector('video');
+            if (otherVideo !== video && !otherVideo.paused) otherVideo.pause();
+          });
+          const promise = video.play();
+          if (promise) promise.catch(() => player.classList.remove('is-playing'));
+        };
+        const togglePlayback = () => video.paused ? play() : video.pause();
+        const updateSeek = (clientX) => {
+          const rect = seek.getBoundingClientRect();
+          if (!rect.width || !video.duration) return;
+          const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+          video.currentTime = ratio * video.duration;
+        };
+
+        big.addEventListener('click', togglePlayback);
+        toggle.addEventListener('click', togglePlayback);
+        mute.addEventListener('click', () => { video.muted = !video.muted; syncMute(); showControls(); });
+        fullscreen.addEventListener('click', () => {
+          const request = player.requestFullscreen || player.webkitRequestFullscreen;
+          if (request) request.call(player);
+        });
+        player.addEventListener('pointermove', showControls);
+        player.addEventListener('pointerdown', showControls);
+        video.addEventListener('click', togglePlayback);
+        video.addEventListener('play', () => { player.classList.add('is-playing'); syncToggle(); showControls(); });
+        video.addEventListener('pause', () => { player.classList.remove('is-playing'); player.classList.add('controls-on'); syncToggle(); });
+        video.addEventListener('ended', () => { player.classList.remove('is-playing'); player.classList.add('controls-on'); syncToggle(); });
+        video.addEventListener('loadedmetadata', () => { duration.textContent = formatTime(video.duration); });
+        video.addEventListener('durationchange', () => { duration.textContent = formatTime(video.duration); });
+        video.addEventListener('volumechange', syncMute);
+        video.addEventListener('timeupdate', () => {
+          if (seeking) return;
+          const ratio = video.duration ? video.currentTime / video.duration : 0;
+          progress.style.width = `${ratio * 100}%`;
+          current.textContent = formatTime(video.currentTime);
+          seek.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+        });
+        video.addEventListener('progress', () => {
+          try {
+            if (video.buffered.length && video.duration) buffer.style.width = `${video.buffered.end(video.buffered.length - 1) / video.duration * 100}%`;
+          } catch (_) {}
+        });
+        seek.addEventListener('pointerdown', (event) => {
+          seeking = true;
+          seek.setPointerCapture?.(event.pointerId);
+          updateSeek(event.clientX);
+        });
+        seek.addEventListener('pointermove', (event) => { if (seeking) updateSeek(event.clientX); });
+        const endSeek = (event) => {
+          seeking = false;
+          try { seek.releasePointerCapture?.(event.pointerId); } catch (_) {}
+        };
+        seek.addEventListener('pointerup', endSeek);
+        seek.addEventListener('pointercancel', endSeek);
+        seek.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowRight') video.currentTime = Math.min(video.duration || 0, video.currentTime + 5);
+          if (event.key === 'ArrowLeft') video.currentTime = Math.max(0, video.currentTime - 5);
+        });
+
+        syncToggle();
+        syncMute();
+      });
+    })();
+  </script>
+</body>
+</html>
