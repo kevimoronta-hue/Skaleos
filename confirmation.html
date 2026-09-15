@@ -122,7 +122,20 @@
       background: var(--ink-deep);
     }
     .player:fullscreen video,
-    .player:-webkit-full-screen video { object-fit: contain; }
+    .player:-webkit-full-screen video,
+    .player.is-fallback-fullscreen video { object-fit: contain; }
+    .player.is-fallback-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100%;
+      height: 100dvh;
+      max-width: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+      background: var(--ink-deep);
+    }
+    body.video-fullscreen-open { overflow: hidden; }
     .player::after {
       content: "";
       position: absolute;
@@ -131,6 +144,8 @@
       pointer-events: none;
       background: linear-gradient(to top, rgba(6, 18, 13, .64), rgba(6, 18, 13, .08) 44%, transparent 65%);
     }
+    .player.uses-native-controls::after { display: none; }
+    .player.uses-native-controls .controls { display: none; }
     .play-big {
       position: absolute;
       left: 50%;
@@ -185,7 +200,8 @@
     .player.is-playing:hover .controls,
     .player:focus-within .controls,
     .player:fullscreen .controls,
-    .player:-webkit-full-screen .controls { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+    .player:-webkit-full-screen .controls,
+    .player.is-fallback-fullscreen .controls { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
     .control {
       width: 38px;
       height: 38px;
@@ -564,6 +580,7 @@
 
       players.forEach((player) => {
         const video = player.querySelector('video');
+        const usesNativeControls = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 760;
         const source = sources[player.dataset.videoKey];
         const big = player.querySelector('.play-big');
         const bigIcon = player.querySelector('.play-symbol');
@@ -578,6 +595,14 @@
         const knob = player.querySelector('.knob');
         let controlsTimer;
         let seeking = false;
+
+        if (usesNativeControls) {
+          player.classList.add('uses-native-controls');
+          video.controls = true;
+          video.setAttribute('controls', '');
+          video.setAttribute('webkit-playsinline', '');
+          video.setAttribute('controlsList', 'nodownload');
+        }
 
         const ensureSource = () => {
           if (!video.getAttribute('src') && source) video.setAttribute('src', window.innerWidth <= 760 ? source.sd : source.hd);
@@ -616,29 +641,73 @@
         toggle.addEventListener('click', togglePlayback);
         mute.addEventListener('click', () => { video.muted = !video.muted; syncMute(); showControls(); });
         const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+        const isNativeVideoFullscreen = () => Boolean(video.webkitDisplayingFullscreen);
+        const isFallbackFullscreen = () => player.classList.contains('is-fallback-fullscreen');
+        const isPlayerFullscreen = () => fullscreenElement() === player || fullscreenElement() === video || isNativeVideoFullscreen() || isFallbackFullscreen();
         const syncFullscreen = () => {
-          const isFullscreen = fullscreenElement() === player;
+          const isFullscreen = isPlayerFullscreen();
           player.classList.toggle('is-fullscreen', isFullscreen);
           fullscreen.innerHTML = isFullscreen ? icons.fullscreenExit : icons.fullscreen;
           fullscreen.setAttribute('aria-label', isFullscreen ? 'Quitter le plein écran' : 'Plein écran');
           if (isFullscreen) showControls();
         };
+        const leaveFallbackFullscreen = () => {
+          player.classList.remove('is-fallback-fullscreen');
+          document.body.classList.remove('video-fullscreen-open');
+          syncFullscreen();
+        };
+        const enterFallbackFullscreen = () => {
+          player.classList.add('is-fallback-fullscreen');
+          document.body.classList.add('video-fullscreen-open');
+          syncFullscreen();
+        };
         fullscreen.addEventListener('click', async () => {
+          ensureSource();
           try {
-            if (fullscreenElement()) {
+            if (isFallbackFullscreen()) {
+              leaveFallbackFullscreen();
+            } else if (isNativeVideoFullscreen() && typeof video.webkitExitFullscreen === 'function') {
+              video.webkitExitFullscreen();
+            } else if (fullscreenElement()) {
               const exit = document.exitFullscreen || document.webkitExitFullscreen;
               if (exit) await exit.call(document);
             } else {
+              const isIPhone = /iPhone|iPod/i.test(navigator.userAgent);
+              const nativeVideoEnter = video.webkitEnterFullscreen || video.webkitEnterFullScreen;
               const request = player.requestFullscreen || player.webkitRequestFullscreen;
-              if (request) await request.call(player);
+
+              // iPhone Safari only exposes fullscreen reliably on the video itself.
+              if (isIPhone && nativeVideoEnter) {
+                nativeVideoEnter.call(video);
+              } else if (request) {
+                try {
+                  await request.call(player);
+                } catch (error) {
+                  if (nativeVideoEnter) nativeVideoEnter.call(video);
+                  else throw error;
+                }
+              } else if (video.requestFullscreen) {
+                await video.requestFullscreen();
+              } else if (nativeVideoEnter) {
+                nativeVideoEnter.call(video);
+              } else {
+                enterFallbackFullscreen();
+              }
             }
-          } catch (_) {}
+          } catch (_) {
+            if (!isPlayerFullscreen()) enterFallbackFullscreen();
+          }
         });
         document.addEventListener('fullscreenchange', syncFullscreen);
         document.addEventListener('webkitfullscreenchange', syncFullscreen);
+        video.addEventListener('webkitbeginfullscreen', syncFullscreen);
+        video.addEventListener('webkitendfullscreen', syncFullscreen);
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && isFallbackFullscreen()) leaveFallbackFullscreen();
+        });
         player.addEventListener('pointermove', showControls);
         player.addEventListener('pointerdown', showControls);
-        video.addEventListener('click', togglePlayback);
+        if (!usesNativeControls) video.addEventListener('click', togglePlayback);
         video.addEventListener('play', () => { player.classList.add('is-playing'); bigIcon.innerHTML = icons.play; syncToggle(); showControls(); });
         video.addEventListener('playing', () => player.classList.remove('is-loading'));
         video.addEventListener('pause', () => { player.classList.remove('is-playing', 'is-loading'); bigIcon.innerHTML = icons.play; player.classList.add('controls-on'); syncToggle(); });
