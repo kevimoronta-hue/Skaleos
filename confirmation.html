@@ -145,6 +145,8 @@
       background: linear-gradient(to top, rgba(6, 18, 13, .64), rgba(6, 18, 13, .08) 44%, transparent 65%);
     }
     .player.uses-native-controls::after { display: none; }
+    .player.uses-native-controls .play-big,
+    .player.uses-native-controls .loader,
     .player.uses-native-controls .controls { display: none; }
     .play-big {
       position: absolute;
@@ -596,17 +598,20 @@
         let controlsTimer;
         let seeking = false;
 
+        const ensureSource = () => {
+          if (!video.getAttribute('src') && source) video.setAttribute('src', window.innerWidth <= 760 ? source.sd : source.hd);
+        };
+
         if (usesNativeControls) {
           player.classList.add('uses-native-controls');
           video.controls = true;
           video.setAttribute('controls', '');
           video.setAttribute('webkit-playsinline', '');
           video.setAttribute('controlsList', 'nodownload');
+          ensureSource();
+          return;
         }
 
-        const ensureSource = () => {
-          if (!video.getAttribute('src') && source) video.setAttribute('src', window.innerWidth <= 760 ? source.sd : source.hd);
-        };
         const showControls = () => {
           player.classList.add('controls-on');
           clearTimeout(controlsTimer);
@@ -707,7 +712,7 @@
         });
         player.addEventListener('pointermove', showControls);
         player.addEventListener('pointerdown', showControls);
-        if (!usesNativeControls) video.addEventListener('click', togglePlayback);
+        video.addEventListener('click', togglePlayback);
         video.addEventListener('play', () => { player.classList.add('is-playing'); bigIcon.innerHTML = icons.play; syncToggle(); showControls(); });
         video.addEventListener('playing', () => player.classList.remove('is-loading'));
         video.addEventListener('pause', () => { player.classList.remove('is-playing', 'is-loading'); bigIcon.innerHTML = icons.play; player.classList.add('controls-on'); syncToggle(); });
