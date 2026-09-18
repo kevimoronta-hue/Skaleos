@@ -1456,7 +1456,7 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
               <div class="tw twv" data-dark-zone="true" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
                   <div class="vidpanel skvp twvp" data-wistia-id="{{ t.wistiaId }}">
-                    <video class="skvid" playsinline preload="none" poster="assets/wistia/{{ t.wistiaId }}.jpg"></video>
+                    <video class="skvid" playsinline preload="none" poster="{{ t.posterSrc }}"></video>
                     <div class="skvp-scrim" aria-hidden="true"></div>
                     <button class="skvp-big" type="button" aria-label="Lire la vidéo"><span class="skvp-big-ic" aria-hidden="true"></span></button>
                     <div class="skvp-loader" aria-hidden="true"><span class="skvp-spin"></span></div>
@@ -1507,7 +1507,7 @@ if(lm||sd||rm||(lc&&/Android/i.test(ua))){document.documentElement.classList.add
               <div class="tw twv" data-dark-zone="true" style="background-image:{{ t.poster }};background-size:cover;background-position:center;">
                 <sc-if value="{{ t.wistiaId }}" hint-placeholder-val="{{ false }}">
                   <div class="vidpanel skvp twvp" data-wistia-id="{{ t.wistiaId }}">
-                    <video class="skvid" playsinline preload="none" poster="assets/wistia/{{ t.wistiaId }}.jpg"></video>
+                    <video class="skvid" playsinline preload="none" poster="{{ t.posterSrc }}"></video>
                     <div class="skvp-scrim" aria-hidden="true"></div>
                     <button class="skvp-big" type="button" aria-label="Lire la vidéo"><span class="skvp-big-ic" aria-hidden="true"></span></button>
                     <div class="skvp-loader" aria-hidden="true"><span class="skvp-spin"></span></div>
@@ -2069,9 +2069,11 @@ class Component extends DCLogic {
       FS: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>',
       FSEXIT: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>'
     };
-    // Sources mp4 Wistia (livraison directe) : hero + 4 vidéos témoignages.
+    // Sources mp4 Wistia (livraison directe) : hero et vidéos témoignages.
     // Le MÊME player (initPlayer) est réutilisé pour toutes -> un seul système.
     const SKV_SRC = {
+      dqkmzp84bk: { sd: 'https://embed-ssl.wistia.com/deliveries/ddf83c84360ce5142729143cb122126b9534cdda.bin', hd: 'https://embed-ssl.wistia.com/deliveries/a1b593e5f3dd4cb364d4013d96468aab93bef75d.bin' },
+      zq8q5o9odm: { sd: 'https://embed-ssl.wistia.com/deliveries/b7dafb682c461f1ad2af9cebbefacfae41387ffd.bin', hd: 'https://embed-ssl.wistia.com/deliveries/04e9193fb9ff2382412a7dc6140aecff5456e624.bin' },
       hero: { sd: 'https://embed-ssl.wistia.com/deliveries/c7e4e5c6a5043aa42ec027273207c0664d028dbb.bin', hd: 'https://embed-ssl.wistia.com/deliveries/c957418be037ff02251c2b670fd6709c58826f0b.bin' },
       cc5oq0ls1r: { sd: 'https://embed-ssl.wistia.com/deliveries/a52c9cda1376a09cf6cbf1692f4909b59fb6d777.bin', hd: 'https://embed-ssl.wistia.com/deliveries/bb28c0c98b977f16e1412fb870c0899a1c8f18c9.bin' },
       '78qplhkpbe': { sd: 'https://embed-ssl.wistia.com/deliveries/0e5eb8624047ce5257a738071081178864276e6a.bin', hd: 'https://embed-ssl.wistia.com/deliveries/0205c5b7c52a1bac15441fba468a4745d719b6a2.bin' },
@@ -2575,10 +2577,13 @@ class Component extends DCLogic {
     ];
     const T2 = T.map((t) => ({ ...t, init: t.name.split(' ').map((w) => w[0]).join('').replace('.', '') }));
     const q = (i, type) => ({ ...T2[i], isVideo: false, isGreen: type === 'g', isWhite: type === 'w' });
-    const vid = (i, name, role, from, to, wistiaId) => ({ isVideo: true, isGreen: false, isWhite: false, name, role, from, to, slot: 'twall-vid-' + i, wistiaId, noWistia: !wistiaId, poster: wistiaId ? ('url(assets/wistia/' + wistiaId + '.jpg)') : 'none' });
+    const vid = (i, name, role, from, to, wistiaId, posterExt = 'jpg') => {
+      const posterSrc = wistiaId ? ('assets/wistia/' + wistiaId + '.' + posterExt) : '';
+      return { isVideo: true, isGreen: false, isWhite: false, name, role, from, to, slot: 'twall-vid-' + i, wistiaId, noWistia: !wistiaId, posterSrc, poster: posterSrc ? ('url(' + posterSrc + ')') : 'none' };
+    };
     const dupRow = a => a.concat(a);
-    const rowA = dupRow([vid(0, 'Estelle', '', '', '', 'cc5oq0ls1r'), q(0, 'w'), vid(1, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(4, 'g'), vid(4, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(1, 'w')]);
-    const rowB = dupRow([vid(2, 'Kevin', 'CEO, Yadulink', '', '', 'qtccki73ws'), q(3, 'g'), vid(3, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(7, 'w'), vid(5, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(8, 'g')]);
+    const rowA = dupRow([vid(6, 'Titouan', 'CEO, Elite Rugby', '', '', 'zq8q5o9odm'), vid(0, 'Estelle', '', '', '', 'cc5oq0ls1r'), q(0, 'w'), vid(1, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(4, 'g'), vid(4, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(1, 'w')]);
+    const rowB = dupRow([vid(7, 'Jessim', 'Growth Operator, Fitzye Coaching', '', '', 'dqkmzp84bk', 'png'), vid(2, 'Kevin', 'CEO, Yadulink', '', '', 'qtccki73ws'), q(3, 'g'), vid(3, 'Florian', 'CEO, Yazee', '', '', '78qplhkpbe'), q(7, 'w'), vid(5, 'Flavio', 'CEO, Pareto Santé', '', '', '94tineazxz'), q(8, 'g')]);
     const dup = a => a.concat(a);
     const colA = dup([T2[0], T2[1], T2[2], T2[3]]);
     const colB = dup([T2[4], T2[5], T2[6], T2[7]]);
