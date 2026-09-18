@@ -237,8 +237,11 @@
     .section-head { max-width: 720px; margin: 0 auto 54px; text-align: center; }
     h2 { margin: 0 0 16px; font-size: clamp(32px, 4.7vw, 58px); line-height: 1.12; letter-spacing: -.025em; }
     .section-head p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
-    .video-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 42px 24px; margin: 0 auto; }
+    .video-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 42px 24px; margin: 0 auto; }
     .video-card { margin: 0; }
+    .video-card-featured { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; }
+    .video-card-featured .player { flex: 1; aspect-ratio: auto; min-height: 0; }
+    .video-card-featured video { object-fit: contain; }
     .player-portrait { aspect-ratio: 9 / 16; box-shadow: 0 18px 48px rgba(14, 38, 32, .17); }
     .player-portrait .controls { gap: 8px; padding: 7px 10px; }
     .player-portrait .control { width: 34px; height: 34px; }
@@ -304,6 +307,8 @@
 
     @media (max-width: 920px) {
       .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 740px; }
+      .video-card-featured { grid-column: 1 / -1; grid-row: auto; display: block; width: min(100%, 340px); justify-self: center; margin-bottom: 8px; }
+      .video-card-featured .player { aspect-ratio: 9 / 16; }
       .case-study { grid-template-columns: 1fr; gap: 24px; }
       .case-study:nth-child(even) .case-copy,
       .case-study:nth-child(even) .case-video { order: initial; }
@@ -381,6 +386,20 @@
           <h2 id="temoignages-title">Mes clients en parlent le mieux.</h2>
         </div>
         <div class="video-grid">
+          <figure class="video-card video-card-featured">
+            <div class="player player-portrait" data-video-key="zq8q5o9odm">
+              <video playsinline preload="none" poster="assets/wistia/zq8q5o9odm.jpg" aria-label="Témoignage de Titouan, CEO Elite Rugby"></video>
+              <button class="play-big" type="button" aria-label="Lire le témoignage de Titouan"><span class="play-symbol" aria-hidden="true"></span></button>
+              <span class="loader" aria-hidden="true"><span class="spinner"></span></span>
+              <div class="controls">
+                <button class="control toggle" type="button" aria-label="Lecture"></button>
+                <span class="time current">0:00</span><div class="seek" role="slider" aria-label="Progression" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="buffer"></span><span class="progress"></span><span class="knob"></span></div><span class="time duration">0:00</span>
+                <button class="control mute" type="button" aria-label="Couper le son"></button>
+                <button class="control fullscreen" type="button" aria-label="Plein écran"></button>
+              </div>
+            </div>
+            <figcaption><p class="video-name">Titouan</p><p class="video-role">CEO, Elite Rugby</p></figcaption>
+          </figure>
           <figure class="video-card">
             <div class="player player-portrait" data-video-key="cc5oq0ls1r">
               <video playsinline preload="none" poster="assets/wistia/cc5oq0ls1r.jpg"></video>
@@ -542,6 +561,10 @@
         fullscreenExit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3"></path><path d="M21 8h-3a2 2 0 0 1-2-2V3"></path><path d="M3 16h3a2 2 0 0 1 2 2v3"></path><path d="M16 21v-3a2 2 0 0 1 2-2h3"></path></svg>'
       };
       const sources = {
+        zq8q5o9odm: {
+          sd: 'https://embed-ssl.wistia.com/deliveries/b7dafb682c461f1ad2af9cebbefacfae41387ffd.bin',
+          hd: 'https://embed-ssl.wistia.com/deliveries/04e9193fb9ff2382412a7dc6140aecff5456e624.bin'
+        },
         hero: {
           sd: 'https://embed-ssl.wistia.com/deliveries/bf5437dfc47c03e13a21e3f8a3bd62cefdd94e09.bin',
           hd: 'https://embed-ssl.wistia.com/deliveries/94342ec96552ddd275000fad5110d846d97a09c5.bin'
